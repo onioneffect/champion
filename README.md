@@ -1,6 +1,9 @@
 # Champion
 Generates arbitrary inputs for the game "Champ'd Up" from The Jackbox Party Pack.
 
+## CONTEXT:
+https://www.youtube.com/watch?v=cZ9gIoIy5No
+
 ## HOWTO:
 1. Run champ.go and point it to a simple-ish PNG file (up to 600x600 pixels, only 2 colors)
 2. Run fix.py on the JSON output
