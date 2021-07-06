@@ -1,0 +1,101 @@
+
+    <div id="playerRegion"><div class="playerTopBarView Orange" style=""><div id="player" class="playerTopBar" style="">
+    <div id="playericon" class="playerIcon" style="display: none;"></div>
+    <div id="playername" class="playerName controller-text" style="">PLAYER NAME</div>
+</div></div></div>
+    <div class="MakeSingleChoice scrollable Orange" style=""><div id="controller" class="state-controller controller-content">
+    <div id="prompt" class="prompt text"><div style=""><div class="text"><span aria-hidden="true">1-1</span><span class="textDescriptions">1 minus 1</span></div></div></div>
+    <div class="error text-danger"></div>
+    <div id="choicesRegion"><div class="choices"><div class="button-group btn-group btn-block"><button type="button" class="button choice-button btn btn-lg" data-action="choose" data-index="0" data-key="" style="" aria-label="">-1</button><button data-action="choose" class="button check-button btn btn-lg"></button></div><div class="button-group btn-group btn-block"><button type="button" class="button choice-button btn btn-lg" data-action="choose" data-index="1" data-key="" style="" aria-label="">-3</button><button data-action="choose" class="button check-button btn btn-lg"></button></div><div class="button-group btn-group btn-block"><button type="button" class="button choice-button btn btn-lg" data-action="choose" data-index="2" data-key="" style="" aria-label="">-4</button><button data-action="choose" class="button check-button btn btn-lg"></button></div><div class="button-group btn-group btn-block"><button type="button" class="button choice-button btn btn-lg" data-action="choose" data-index="3" data-key="" style="" aria-label="">0</button><button data-action="choose" class="button check-button btn btn-lg"></button></div></div></div>
+    <div id="chosen" class="chosen text"></div>
+    <div class="makeSingleChoiceDone" style="display: none;">
+        <span class="doneText"></span>
+    </div>
+</div></div>
+<br>
+<button>
+  <img
+    width="150px"
+    src="https://vignette.wikia.nocookie.net/jjba/images/f/fb/Made_in_Heaven_2.png/revision/latest"
+    onclick="fast();"/>
+</button>
+<div
+  id="resultsbox"
+  style="overflow: scroll; height: 200px; width: 100px">
+</div>
+<h1 id="scorecounter" style="color: blue"></h1>
+
+<script>
+  var points = 0;
+
+  function hideClutter()
+  {
+      document.getElementById("controller").style.visibility = "hidden";
+      document.getElementsByClassName("textDescriptions")[0].innerText = "";
+
+      blanks = document.getElementsByClassName("check-button");
+      for(i = 0; i < blanks.length; i++)
+        blanks[i].style.visibility = "hidden";
+  };
+
+  function showClutter()
+  {
+      document.getElementById("controller").style.visibility = "visible";
+  };
+
+  function checkAnswer(response)
+  {
+    responseParagraph = document.createElement("p");
+    if(response == luckyIndex)
+    {
+      responseParagraph.style.color = "green";
+      responseParagraph.innerText = "Correct!";
+      points++;
+    }
+    else
+    {
+      responseParagraph.style.color = "red";
+      responseParagraph.innerText = "Wrong!";
+    };
+
+    document.getElementById("resultsbox").appendChild(responseParagraph);
+    displayQuestion();
+  };
+
+  function generateQuestion()
+  {
+    var parameters = [];
+    for(i = 0; i < 2; i++)
+      parameters[i] = Math.floor((Math.random() * 20) + 1);
+
+    operator = (Math.random() >= 0.5 ? "+" : "-");
+    return parameters[0] + operator + parameters[1];
+  };
+
+  function displayQuestion()
+  {
+    showClutter();
+
+    document.getElementById("scorecounter").innerText = points;
+
+    promptResult = generateQuestion();
+    document.getElementById("prompt").children[0].children[0].children[0].innerText = promptResult;
+
+    choices = document.getElementsByClassName("choice-button")
+    luckyIndex = Math.floor(Math.random() * 3);
+    for(i = 0; i < choices.length; i++)
+    {
+      if(i == luckyIndex)
+        choices[i].innerText = eval(promptResult);
+      else
+        choices[i].innerText = Math.floor(Math.random() * (40 - (-20)) + (-20));
+
+      choices[i].onclick = function() { checkAnswer(this.getAttribute("data-index")); };
+    };
+
+    return;
+  };
+
+  hideClutter();
+  displayQuestion();
+</script>
