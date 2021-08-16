@@ -3,12 +3,15 @@ package main
 import (
 	"fmt"
 	"image"
+	"image/color"
+	_ "image/jpeg"
 	_ "image/png"
 	"os"
 )
 
 type ImageInfo struct {
 	Format        string
+	CModel        color.Model
 	Width, Height int
 	Data          *image.Image
 }
@@ -20,9 +23,11 @@ func read_img_info(img_reader *os.File) ImageInfo {
 	if err != nil {
 		panic(err)
 	}
+
 	return_info.Height = config.Height
 	return_info.Width = config.Width
 	return_info.Format = format
+	return_info.CModel = config.ColorModel
 
 	_, err = img_reader.Seek(0, 0)
 	if err != nil {
@@ -38,15 +43,21 @@ func read_img_info(img_reader *os.File) ImageInfo {
 	return return_info
 }
 
-func print_img_info(imginf ImageInfo) {
+func (imginf ImageInfo) print_img_info() {
 	fmt.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
 	fmt.Println("Image format:", imginf.Format)
+
+	// Makes CModel convert an empty color.
+	// Returns the corresponding color model.
+	// Thanks to https://stackoverflow.com/questions/45226991/
+	fmt.Printf("Image color mode: %T\n", imginf.CModel.Convert(color.RGBA{}))
+
 	fmt.Println("First pixel:", (*imginf.Data).At(0, 0))
 }
 
 func img_processor(fp *os.File) {
-	var current_img ImageInfo = read_img_info(fp)
-	print_img_info(current_img)
+	var currentImg ImageInfo = read_img_info(fp)
+	currentImg.print_img_info()
 }
 
 func main() {
@@ -55,8 +66,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		defer img_file.Close()
 
 		img_processor(img_file)
-		img_file.Close()
 	}
 }
