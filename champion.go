@@ -85,7 +85,8 @@ func img_processor(fp *os.File) {
 	var currentImg ImageInfo = read_img_info(fp)
 
 	// Decodes RGBA into a 3-dimensional array
-	// TODO: This might not work correctly with grayscale images?
+	// TODO: This probably works with grayscale images,
+	// but the resulting array should have dimensions [][][1]!
 	var currentDecoded [][][3]float32 = image_array(currentImg)
 	currentImg.Decoded = &currentDecoded
 
