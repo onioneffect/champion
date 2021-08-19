@@ -17,6 +17,7 @@ type ImageInfo struct {
 	ColorModel    color.Model
 	Width, Height int
 	Data          *image.Image
+	Decoded       *[][][3]float32
 }
 
 // Thanks to https://stackoverflow.com/questions/33186783/
@@ -77,14 +78,18 @@ func (imginf ImageInfo) print_img_info() {
 	fmt.Printf("Image color model: %T\n", imginf.ColorModel.Convert(color.RGBA{}))
 
 	fmt.Println("Image bounds:", (*imginf.Data).Bounds())
-	fmt.Println("First pixel:", (*imginf.Data).At(0, 0))
+	fmt.Println("First pixel:", (*imginf.Decoded)[0][0])
 }
 
 func img_processor(fp *os.File) {
 	var currentImg ImageInfo = read_img_info(fp)
-	var asdasd [][][3]float32 = image_array(currentImg)
+
+	// Decodes RGBA into a 3-dimensional array
+	// TODO: This might not work correctly with grayscale images?
+	var currentDecoded [][][3]float32 = image_array(currentImg)
+	currentImg.Decoded = &currentDecoded
+
 	currentImg.print_img_info()
-	fmt.Println(">>>", asdasd[0][0])
 }
 
 func main() {
