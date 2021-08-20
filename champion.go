@@ -72,13 +72,22 @@ func (imginf ImageInfo) print_img_info() {
 	fmt.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
 	fmt.Println("Image format:", imginf.Format)
 
+	fmt.Println("Image bounds:", (*imginf.Data).Bounds())
+
 	// Makes ColorModel convert an empty color.
 	// Returns the corresponding color model.
 	// Thanks to https://stackoverflow.com/questions/45226991/
-	fmt.Printf("Image color model: %T\n", imginf.ColorModel.Convert(color.RGBA{}))
+	imgColorModel := imginf.ColorModel.Convert(color.RGBA{})
+	fmt.Printf("Image color model: %T\n", imgColorModel)
 
-	fmt.Println("Image bounds:", (*imginf.Data).Bounds())
-	fmt.Println("First pixel:", (*imginf.Decoded)[0][0])
+	grayColorModel := color.Gray{}
+	firstPix := (*imginf.Decoded)[0][0]
+	// Check if image is grayscale
+	if imgColorModel == grayColorModel {
+		fmt.Println("First pixel:", firstPix[0])
+	} else {
+		fmt.Println("First pixel:", firstPix)
+	}
 }
 
 func img_processor(fp *os.File) {
