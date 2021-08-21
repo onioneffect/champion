@@ -68,6 +68,12 @@ func read_img_info(img_reader *os.File) ImageInfo {
 	return return_info
 }
 
+func print_floatarray_info(arrptr *[][][3]float32) {
+	fmt.Println("Array len:", len(*arrptr))
+	fmt.Println("Row len:", len((*arrptr)[0]))
+	fmt.Println("Cell len:", len((*arrptr)[0][0]))
+}
+
 func (imginf ImageInfo) print_img_info() {
 	fmt.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
 	fmt.Println("Image format:", imginf.Format)
@@ -99,7 +105,11 @@ func img_processor(fp *os.File) {
 	var currentDecoded [][][3]float32 = image_array(currentImg)
 	currentImg.Decoded = &currentDecoded
 
+	fmt.Println("Printing image information:")
 	currentImg.print_img_info()
+
+	fmt.Println("\nPrinting array information:")
+	print_floatarray_info(currentImg.Decoded)
 }
 
 func main() {
