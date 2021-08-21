@@ -1,3 +1,4 @@
+// main.go
 package main
 
 import (
@@ -17,23 +18,24 @@ type ImageInfo struct {
 	ColorModel    color.Model
 	Width, Height int
 	Data          *image.Image
-	Decoded       *[][][3]float32
+	Decoded       *[][][3]int32
 }
 
 // Thanks to https://stackoverflow.com/questions/33186783/
-func image_array(im ImageInfo) [][][3]float32 {
+func image_array(im ImageInfo) [][][3]int32 {
 	width, height := im.Width, im.Height
-	iaa := make([][][3]float32, height)
+	iaa := make([][][3]int32, height)
 	src_rgba := image.NewRGBA(im.Bounds)
 	draw.Copy(src_rgba, image.Point{}, (*im.Data), im.Bounds, draw.Src, nil)
 
 	for y := 0; y < height; y++ {
-		row := make([][3]float32, width)
+		row := make([][3]int32, width)
 		for x := 0; x < width; x++ {
 			idx_s := (y*width + x) * 4
 			pix := src_rgba.Pix[idx_s : idx_s+4]
-			row[x] = [3]float32{float32(pix[0]), float32(pix[1]), float32(pix[2])}
+			row[x] = [3]int32{int32(pix[0]), int32(pix[1]), int32(pix[2])}
 		}
+
 		iaa[y] = row
 	}
 
@@ -68,7 +70,11 @@ func read_img_info(img_reader *os.File) ImageInfo {
 	return return_info
 }
 
-func print_floatarray_info(arrptr *[][][3]float32) {
+func print_test_intarray(arrptr *[][][3]int32) {
+	fmt.Println("357:785 (should be 1 1 1) ->", (*arrptr)[785][357])
+	fmt.Println("358:785 (should be 76 76 76) ->", (*arrptr)[785][358])
+}
+func print_intarray_info(arrptr *[][][3]int32) {
 	fmt.Println("Array len:", len(*arrptr))
 	fmt.Println("Row len:", len((*arrptr)[0]))
 	fmt.Println("Cell len:", len((*arrptr)[0][0]))
@@ -102,14 +108,17 @@ func img_processor(fp *os.File) {
 	// Decodes RGBA into a 3-dimensional array
 	// TODO: This probably works with grayscale images,
 	// but the resulting array should have dimensions [][][1]!
-	var currentDecoded [][][3]float32 = image_array(currentImg)
+	var currentDecoded [][][3]int32 = image_array(currentImg)
 	currentImg.Decoded = &currentDecoded
 
 	fmt.Println("Printing image information:")
 	currentImg.print_img_info()
 
 	fmt.Println("\nPrinting array information:")
-	print_floatarray_info(currentImg.Decoded)
+	print_intarray_info(currentImg.Decoded)
+
+	fmt.Println("\nPrinting test pixels:")
+	print_test_intarray(currentImg.Decoded)
 }
 
 func main() {
