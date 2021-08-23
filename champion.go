@@ -21,6 +21,14 @@ type ImageInfo struct {
 	Decoded       *[][][3]int32
 }
 
+type Line struct {
+	// Try to store the 24-bit color representation in the lower bits of int32.
+	HexColor int32
+
+	// Start and end are represented by x and y, so four numbers in total.
+	Start, End [2]int32
+}
+
 // Thanks to https://stackoverflow.com/questions/33186783/
 func image_array(im ImageInfo) [][][3]int32 {
 	width, height := im.Width, im.Height
@@ -74,6 +82,7 @@ func print_test_intarray(arrptr *[][][3]int32) {
 	fmt.Println("357:785 (should be 1 1 1) ->", (*arrptr)[785][357])
 	fmt.Println("358:785 (should be 76 76 76) ->", (*arrptr)[785][358])
 }
+
 func print_intarray_info(arrptr *[][][3]int32) {
 	fmt.Println("Array len:", len(*arrptr))
 	fmt.Println("Row len:", len((*arrptr)[0]))
