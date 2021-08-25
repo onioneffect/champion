@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 
 	"golang.org/x/image/draw"

@@ -3,8 +3,6 @@ package main
 
 import (
 	"fmt"
-	_ "image/jpeg"
-	_ "image/png"
 	"os"
 
 	"github.com/onioneffect/champion/imagelib"
@@ -46,8 +44,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		defer img_file.Close()
 
 		img_processor(img_file)
+		img_file.Close()
 	}
 }
