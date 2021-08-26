@@ -19,13 +19,13 @@ func print_intarray_info(arrptr *[][][3]int32) {
 	fmt.Println("Cell len:", len((*arrptr)[0][0]))
 }
 
-func img_processor(fp *os.File) {
+func ImgProcessorRGB(fp *os.File) {
 	var currentImg imagelib.ImageInfo = imagelib.Read_img_info(fp)
 
 	// Decodes RGBA into a 3-dimensional array
 	// TODO: This probably works with grayscale images,
 	// but the resulting array should have dimensions [][][1]!
-	var currentDecoded [][][3]int32 = imagelib.Image_array(currentImg)
+	var currentDecoded [][][3]int32 = imagelib.ImageArray(currentImg)
 	currentImg.Decoded = &currentDecoded
 
 	fmt.Println("Printing image information:")
@@ -45,7 +45,7 @@ func main() {
 			panic(err)
 		}
 
-		img_processor(img_file)
+		ImgProcessorRGB(img_file)
 		img_file.Close()
 	}
 }

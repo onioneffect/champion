@@ -22,7 +22,7 @@ type ImageInfo struct {
 }
 
 // Thanks to https://stackoverflow.com/questions/33186783/
-func Image_array(im ImageInfo) [][][3]int32 {
+func ImageArray(im ImageInfo) [][][3]int32 {
 	width, height := im.Width, im.Height
 	iaa := make([][][3]int32, height)
 	src_rgba := image.NewRGBA(im.Bounds)

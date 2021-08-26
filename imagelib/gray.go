@@ -3,11 +3,23 @@ package imagelib
 
 import (
 	"image"
+	"image/color"
+	_ "image/jpeg"
+	_ "image/png"
 
 	"golang.org/x/image/draw"
 )
 
-func image_array_gray(im ImageInfo) [][]int32 {
+type ImageInfoGray struct {
+	Bounds        image.Rectangle
+	Format        string
+	ColorModel    color.Model
+	Width, Height int
+	Data          *image.Image
+	Decoded       *[][]int32
+}
+
+func ImageArrayGray(im ImageInfo) [][]int32 {
 	width, height := im.Width, im.Height
 	iaa := make([][]int32, height)
 	src_rgba := image.NewRGBA(im.Bounds)
