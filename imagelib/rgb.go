@@ -42,7 +42,7 @@ func ImageArray(im ImageInfo) [][][3]int32 {
 	return iaa
 }
 
-func Read_img_info(img_reader *os.File) ImageInfo {
+func ReadImgInfo(img_reader *os.File) ImageInfo {
 	var return_info ImageInfo
 
 	config, format, err := image.DecodeConfig(img_reader)
@@ -70,7 +70,7 @@ func Read_img_info(img_reader *os.File) ImageInfo {
 	return return_info
 }
 
-func (imginf ImageInfo) Print_img_info() {
+func (imginf ImageInfo) PrintImgInfo() {
 	fmt.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
 	fmt.Println("Image format:", imginf.Format)
 
