@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/onioneffect/champion/imagelib"
+	imagelib "github.com/onioneffect/champion/lib"
 )
 
 func printTestIntArray(arrptr *[][][3]int32) {
