@@ -32,6 +32,9 @@ func ImgProcessor(fp *os.File) {
 
 	fmt.Println("\nPrinting test pixels:")
 	printTestIntArray(currentImg.Decoded)
+
+	fmt.Println("\nRunning ImagePixLoop:")
+	imagelib.ImagePixLoop(currentImg)
 }
 
 func main() {
