@@ -1,4 +1,4 @@
-// main.go
+// champion.go
 package main
 
 import (

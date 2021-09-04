@@ -1,4 +1,4 @@
-// rgb.go
+// image.go
 package imagelib
 
 import (
