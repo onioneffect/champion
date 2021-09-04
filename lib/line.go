@@ -1,7 +1,10 @@
 // line.go
 package imagelib
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Line struct {
 	// HexColor is just an array with the RGB values.
@@ -9,6 +12,27 @@ type Line struct {
 
 	// Start and end are represented by x and y, so four numbers in total.
 	Start, End [2]int32
+}
+
+var chars = [16]rune{
+	'0', '1', '2', '3',
+	'4', '5', '6', '7',
+	'8', '9', 'A', 'B',
+	'C', 'D', 'E', 'F',
+}
+
+func (l Line) RGBToHexNew() string {
+	var sb strings.Builder
+
+	for _, val := range l.HexColor {
+		bigEnd := val / 16
+		sb.WriteRune(chars[bigEnd])
+
+		lilEnd := val % 16
+		sb.WriteRune(chars[lilEnd])
+	}
+
+	return sb.String()
 }
 
 func (l Line) RGBToHex() (string, error) {
