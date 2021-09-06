@@ -21,7 +21,7 @@ var chars = [16]rune{
 	'C', 'D', 'E', 'F',
 }
 
-func (l Line) RGBToHexNew() string {
+func (l Line) RGBToHex() string {
 	var sb strings.Builder
 
 	for _, val := range l.HexColor {
@@ -33,22 +33,6 @@ func (l Line) RGBToHexNew() string {
 	}
 
 	return sb.String()
-}
-
-func (l Line) RGBToHex() (string, error) {
-	var fmtString string
-	var retString string = "#"
-
-	for _, i := range l.HexColor {
-		fmtString = "%X"
-		if i < 16 {
-			fmtString = "0" + fmtString
-		}
-
-		retString += fmt.Sprintf(fmtString, uint8(i))
-	}
-
-	return retString, nil
 }
 
 func ImagePixLoop(im ImageInfo) {
