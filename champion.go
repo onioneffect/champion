@@ -33,8 +33,17 @@ func ImgProcessor(fp *os.File) {
 	fmt.Println("\nPrinting test pixels:")
 	printTestIntArray(currentImg.Decoded)
 
-	fmt.Println("\nRunning ImagePixLoop:")
-	imagelib.ImagePixLoop(currentImg)
+	//fmt.Println("\nRunning ImagePixLoop:")
+	//imagelib.ImagePixLoop(currentImg)
+
+	fmt.Println("\nTesting color compare:")
+	var firstLine, secondLine imagelib.Line
+	firstLine.HexColor = [3]int32{255, 255, 255}
+	secondLine.HexColor = [3]int32{10, 20, 30}
+
+	firstResult := firstLine.Eq(firstLine)
+	secResult := firstLine.Eq(secondLine)
+	fmt.Println(firstResult, secResult)
 }
 
 func main() {

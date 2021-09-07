@@ -21,6 +21,10 @@ var chars = [16]rune{
 	'C', 'D', 'E', 'F',
 }
 
+func (l Line) Eq(cmp Line) bool {
+	return (l.HexColor == cmp.HexColor)
+}
+
 func (l Line) RGBToHex() string {
 	var sb strings.Builder
 
