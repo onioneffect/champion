@@ -39,9 +39,12 @@ func (l Line) RGBToHex() string {
 	return sb.String()
 }
 
-func ImagePixLoop(im ImageInfo) {
+func TestPixLoop(im ImageInfo, pixels int) {
+	ImagePixLoop(im, pixels%im.Width, pixels/im.Width+1)
+}
+
+func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	decodedPtr := im.Decoded
-	xLen, yLen := im.Width, im.Height
 
 	fmt.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
 	for y := 0; y < yLen; y++ {
