@@ -21,12 +21,24 @@ var chars = [16]rune{
 	'C', 'D', 'E', 'F',
 }
 
+const lineFMT string = `{"thickness": 0.1,"color": "%s","points": "%d,%d|%d,%d"}`
+
+func (l Line) LineToString() string {
+	var b strings.Builder
+	var hColor string = l.RGBToHex()
+
+	fmt.Fprintf(&b, lineFMT, hColor, l.Start[0], l.Start[1], l.End[0], l.End[1])
+	fmt.Println(b.String())
+	return b.String()
+}
+
 func (l Line) Eq(cmp Line) bool {
 	return (l.HexColor == cmp.HexColor)
 }
 
 func (l Line) RGBToHex() string {
 	var sb strings.Builder
+	sb.WriteRune('#')
 
 	for _, val := range l.HexColor {
 		bigEnd := val / 16

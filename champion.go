@@ -36,8 +36,8 @@ func ImgProcessor(fp *os.File) {
 	//fmt.Println("\nRunning ImagePixLoop:")
 	//imagelib.ImagePixLoop(currentImg)
 
-	fmt.Println("\nRunning TestPixLoop:")
-	imagelib.TestPixLoop(currentImg, 100)
+	//fmt.Println("\nRunning TestPixLoop:")
+	//imagelib.TestPixLoop(currentImg, 100)
 
 	fmt.Println("\nTesting color compare:")
 	var firstLine, secondLine imagelib.Line
@@ -47,6 +47,11 @@ func ImgProcessor(fp *os.File) {
 	firstResult := firstLine.Eq(firstLine)
 	secResult := firstLine.Eq(secondLine)
 	fmt.Println(firstResult, secResult)
+
+	fmt.Println("\nTesting line format function:")
+	firstLine.Start = [2]int32{0, 0}
+	firstLine.End = [2]int32{0, 10}
+	firstLine.LineToString()
 }
 
 func main() {
