@@ -10,10 +10,12 @@ type Line struct {
 	// HexColor is just an array with the RGB values.
 	HexColor [3]int32
 
-	// Start and end are represented by x and y, so four numbers in total.
+	// Start and end are represented by x and y
+	// Two coordinates for each. Four numbers in total.
 	Start, End [2]int32
 }
 
+// Characters used to encode numbers in hexadecimal
 var chars = [16]rune{
 	'0', '1', '2', '3',
 	'4', '5', '6', '7',
@@ -21,22 +23,42 @@ var chars = [16]rune{
 	'C', 'D', 'E', 'F',
 }
 
+// JSON line format used by Champ'd Up.
+
+// A `thickness` of 0.1 can closely represent
+// a single pixel, but its color may "bleed"
+// into the pixels around it, only lighter.
+
+// `color` is encoded as "#000000" to "#FFFFFF".
+
+// `points` are "x,y|x,y" for a straight line,
+// described by only two coordinates/points.
 const simpleLineFMT string = `{` +
 	`"thickness": 0.1,` +
 	`"color": "%s",` +
 	`"points": "%d,%d|%d,%d"` +
 	`}`
 
+// TODO: Using more than two points allows for
+// drawing complex paths. Exploiting this fact
+// is the most important thing for this project.
+
 func (l Line) LineToString() string {
 	var b strings.Builder
 	var hColor string = l.RGBToHex()
 
 	fmt.Fprintf(
-		&b, simpleLineFMT, hColor,
+		// string builder and format string
+		&b, simpleLineFMT,
+
+		// Formatting arguments below:
+		// RGB color encoded in hexadecimal
+		hColor,
+		// Starting points
 		l.Start[0], l.Start[1],
+		// End points
 		l.End[0], l.End[1])
 
-	fmt.Println(b.String())
 	return b.String()
 }
 

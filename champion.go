@@ -43,7 +43,7 @@ func ImgProcessor(fp *os.File) {
 	var firstLine imagelib.Line
 	firstLine.Start = [2]int32{0, 0}
 	firstLine.End = [2]int32{0, 10}
-	firstLine.LineToString()
+	fmt.Println(firstLine.LineToString())
 }
 
 func main() {
