@@ -57,7 +57,8 @@ func (l Line) LineToString() string {
 		// Starting points
 		l.Start[0], l.Start[1],
 		// End points
-		l.End[0], l.End[1])
+		l.End[0], l.End[1],
+	)
 
 	return b.String()
 }

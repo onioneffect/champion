@@ -38,12 +38,6 @@ func ImgProcessor(fp *os.File) {
 
 	//fmt.Println("\nRunning TestPixLoop:")
 	//imagelib.TestPixLoop(currentImg, 100)
-
-	fmt.Println("\nTesting line format function:")
-	var firstLine imagelib.Line
-	firstLine.Start = [2]int32{0, 0}
-	firstLine.End = [2]int32{0, 10}
-	fmt.Println(firstLine.LineToString())
 }
 
 func main() {
