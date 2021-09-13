@@ -2,7 +2,10 @@
 package main
 
 import (
+	"os"
 	"testing"
+
+	"image"
 
 	imagelib "github.com/onioneffect/champion/lib"
 )
@@ -40,6 +43,84 @@ func TestLineFormat(t *testing.T) {
 	for i, j := range testLines {
 		if actual := j.LineToString(); actual != expected[i] {
 			t.Error(actual, expected[i])
+		}
+	}
+}
+
+func boundGenerator(twoDimensions [3][2]int) (ret []image.Rectangle) {
+	for i := 0; i < 3; i++ {
+		currObj := image.Rectangle{
+			Min: image.Point{
+				X: 0,
+				Y: 0,
+			},
+			Max: image.Point{
+				X: twoDimensions[i][0],
+				Y: twoDimensions[i][1],
+			},
+		}
+
+		ret = append(ret, currObj)
+	}
+
+	return
+}
+
+func TestReadImgInfo(t *testing.T) {
+	testFilenames := [3]string{
+		"bird.png",
+		"burger.png",
+		"donda.jpg",
+	}
+
+	testDimensions := [3][2]int{
+		{450, 450},
+		{5000, 5000},
+		{512, 512},
+	}
+	expectedBounds := boundGenerator(testDimensions)
+
+	expected := [3]imagelib.ImageInfo{
+		{
+			Bounds: expectedBounds[0],
+			Format: "png",
+			Width:  450,
+			Height: 450,
+		},
+
+		{
+			Bounds: expectedBounds[1],
+			Format: "png",
+			Width:  5000,
+			Height: 5000,
+		},
+
+		{
+			Bounds: expectedBounds[2],
+			Format: "jpeg",
+			Width:  512,
+			Height: 512,
+		},
+	}
+
+	for i := 0; i < 3; i++ {
+		fp, err := os.Open("tests/" + testFilenames[i])
+		if err != nil {
+			t.Error(err)
+		}
+
+		testImgInfo := imagelib.ReadImgInfo(fp)
+
+		if testImgInfo.Bounds != expected[i].Bounds {
+			t.Errorf("Mismatched bounds. Index %d", i)
+		}
+
+		if testImgInfo.Width != expected[i].Width {
+			t.Errorf("Mismatched dimensions. Index %d", i)
+		}
+
+		if testImgInfo.Format != expected[i].Format {
+			t.Errorf("Mismatched format. Index %d", i)
 		}
 	}
 }
