@@ -108,6 +108,7 @@ func TestReadImgInfo(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
+		defer fp.Close()
 
 		testImgInfo := imagelib.ReadImgInfo(fp)
 
