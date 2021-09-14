@@ -41,30 +41,30 @@ func ImageArray(im ImageInfo) [][][3]int32 {
 	return iaa
 }
 
-func ReadImgInfo(img_reader *os.File) ImageInfo {
-	var return_info ImageInfo
+func ReadImgInfo(imgReader *os.File) ImageInfo {
+	var returnInfo ImageInfo
 
-	config, format, err := image.DecodeConfig(img_reader)
+	config, format, err := image.DecodeConfig(imgReader)
 	if err != nil {
 		panic(err)
 	}
 
-	return_info.Height = config.Height
-	return_info.Width = config.Width
-	return_info.Format = format
-	return_info.ColorModel = config.ColorModel
+	returnInfo.Height = config.Height
+	returnInfo.Width = config.Width
+	returnInfo.Format = format
+	returnInfo.ColorModel = config.ColorModel
 
-	_, err = img_reader.Seek(0, 0)
+	_, err = imgReader.Seek(0, 0)
 	if err != nil {
 		panic(err)
 	}
 
-	img_data, _, err := image.Decode(img_reader)
+	imgData, _, err := image.Decode(imgReader)
 	if err != nil {
 		panic(err)
 	}
-	return_info.Bounds = img_data.Bounds()
-	return_info.Data = &img_data
+	returnInfo.Bounds = imgData.Bounds()
+	returnInfo.Data = &imgData
 
-	return return_info
+	return returnInfo
 }
