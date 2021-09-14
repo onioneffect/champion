@@ -1,4 +1,4 @@
-// main_test.go
+// image_test.go
 package main
 
 import (

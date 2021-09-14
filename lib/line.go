@@ -3,6 +3,7 @@ package imagelib
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -89,7 +90,7 @@ func TestPixLoop(im ImageInfo, pixels int) {
 func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	decodedPtr := im.Decoded
 
-	fmt.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
+	log.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
 	for y := 0; y < yLen; y++ {
 		for x := 0; x < xLen; x++ {
 			fmt.Printf("[%d, %d]\t%d\n", x, y, (*decodedPtr)[y][x])
