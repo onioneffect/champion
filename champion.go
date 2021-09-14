@@ -68,7 +68,6 @@ func main() {
 	for i := 1; i < len(os.Args); i++ {
 		if os.Args[i] == "--debug" {
 			useDebugging = true
-			continue
 		} else {
 			allFiles = append(allFiles, os.Args[i])
 			allFilesCtr++
