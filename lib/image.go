@@ -2,7 +2,6 @@
 package imagelib
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	_ "image/jpeg"
@@ -68,26 +67,4 @@ func ReadImgInfo(img_reader *os.File) ImageInfo {
 	return_info.Data = &img_data
 
 	return return_info
-}
-
-func (imginf ImageInfo) PrintImgInfo() {
-	fmt.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
-	fmt.Println("Image format:", imginf.Format)
-
-	fmt.Println("Image bounds:", (*imginf.Data).Bounds())
-
-	// Makes ColorModel convert an empty color.
-	// Returns the corresponding color model.
-	// Thanks to https://stackoverflow.com/questions/45226991/
-	imgColorModel := imginf.ColorModel.Convert(color.RGBA{})
-	fmt.Printf("Image color model: %T\n", imgColorModel)
-
-	grayColorModel := color.Gray{}
-	firstPix := (*imginf.Decoded)[0][0]
-	// Check if image is grayscale
-	if imgColorModel == grayColorModel {
-		fmt.Println("First pixel:", firstPix[0])
-	} else {
-		fmt.Println("First pixel:", firstPix)
-	}
 }

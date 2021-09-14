@@ -3,15 +3,12 @@ package main
 
 import (
 	"fmt"
+	"image/color"
+	"log"
 	"os"
 
 	imagelib "github.com/onioneffect/champion/lib"
 )
-
-func printTestIntArray(arrptr *[][][3]int32) {
-	fmt.Println("357:785 (should be 1 1 1) ->", (*arrptr)[785][357])
-	fmt.Println("358:785 (should be 76 76 76) ->", (*arrptr)[785][358])
-}
 
 func printIntarrayInfo(arrptr *[][][3]int32) {
 	fmt.Println("Array len:", len(*arrptr))
@@ -19,19 +16,42 @@ func printIntarrayInfo(arrptr *[][][3]int32) {
 	fmt.Println("Cell len:", len((*arrptr)[0][0]))
 }
 
-func ImgProcessor(fp *os.File) {
+func PrintImgInfo(imginf imagelib.ImageInfo) {
+	log.Printf("Image dimensions: %d, %d\n", imginf.Width, imginf.Height)
+	log.Println("Image format:", imginf.Format)
+
+	log.Println("Image bounds:", (*imginf.Data).Bounds())
+
+	// Makes ColorModel convert an empty color.
+	// Returns the corresponding color model.
+	// Thanks to https://stackoverflow.com/questions/45226991/
+	imgColorModel := imginf.ColorModel.Convert(color.RGBA{})
+	fmt.Printf("Image color model: %T\n", imgColorModel)
+
+	grayColorModel := color.Gray{}
+	firstPix := (*imginf.Decoded)[0][0]
+	// Check if image is grayscale
+	if imgColorModel == grayColorModel {
+		fmt.Println("First pixel:", firstPix[0])
+	} else {
+		fmt.Println("First pixel:", firstPix)
+	}
+}
+
+func ImgProcessor(fp *os.File, debug bool) {
 	var currentImg imagelib.ImageInfo = imagelib.ReadImgInfo(fp)
 	var currentDecoded [][][3]int32 = imagelib.ImageArray(currentImg)
 	currentImg.Decoded = &currentDecoded
 
+	if debug {
+		log.Println("We are in debuggign mode!!! :D")
+	}
+
 	fmt.Println("Printing image information:")
-	currentImg.PrintImgInfo()
+	PrintImgInfo(currentImg)
 
 	fmt.Println("\nPrinting array information:")
 	printIntarrayInfo(currentImg.Decoded)
-
-	fmt.Println("\nPrinting test pixels:")
-	printTestIntArray(currentImg.Decoded)
 
 	//fmt.Println("\nRunning ImagePixLoop:")
 	//imagelib.ImagePixLoop(currentImg)
@@ -41,13 +61,27 @@ func ImgProcessor(fp *os.File) {
 }
 
 func main() {
+	var allFiles []string
+	var allFilesCtr int = 0
+	var useDebugging bool = false
+
 	for i := 1; i < len(os.Args); i++ {
-		imgFile, err := os.Open(os.Args[i])
+		if os.Args[i] == "--debug" {
+			useDebugging = true
+			continue
+		} else {
+			allFiles = append(allFiles, os.Args[i])
+			allFilesCtr++
+		}
+	}
+
+	for i := 0; i < allFilesCtr; i++ {
+		imgFile, err := os.Open(allFiles[i])
 		if err != nil {
 			panic(err)
 		}
 
-		ImgProcessor(imgFile)
+		ImgProcessor(imgFile, useDebugging)
 		imgFile.Close()
 	}
 }
