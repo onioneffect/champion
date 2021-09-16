@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"log"
 	"os"
@@ -60,12 +61,23 @@ func main() {
 	var allFiles []string
 	var allFilesCtr int = 0
 	var useDebugging bool = false
+	var logOutputFile string
+	var curr string
 
 	for i := 1; i < len(os.Args); i++ {
-		if os.Args[i] == "--debug" {
+		curr = os.Args[i]
+
+		if curr == "--debug" {
 			useDebugging = true
+		} else if curr == "--file" {
+			// We increment i so it points to the argument right
+			// after "--file", and so the next iteration of the
+			// loop doesn't include it in the allFiles list.
+			i++
+			logOutputFile = os.Args[i]
+			fmt.Println(logOutputFile)
 		} else {
-			allFiles = append(allFiles, os.Args[i])
+			allFiles = append(allFiles, curr)
 			allFilesCtr++
 		}
 	}
