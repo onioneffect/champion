@@ -2,13 +2,27 @@
 package main
 
 import (
-	"fmt"
 	"image/color"
 	"log"
 	"os"
 
 	imagelib "github.com/onioneffect/champion/lib"
 )
+
+func tryLogOutputStr(path string) {
+	filePtr, err := os.OpenFile(
+		path,
+		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+		0666,
+	)
+
+	if err != nil {
+		log.Printf("ERROR (log file): %s\n", err)
+		log.Println("Ignoring log file option...")
+	} else {
+		log.SetOutput(filePtr)
+	}
+}
 
 func logIntarrayInfo(arrptr *[][][3]int32) {
 	log.Println("Array len:", len(*arrptr))
@@ -61,7 +75,7 @@ func main() {
 	var allFiles []string
 	var allFilesCtr int = 0
 	var useDebugging bool = false
-	var logOutputFile string
+	var logOutputStr string
 	var curr string
 
 	for i := 1; i < len(os.Args); i++ {
@@ -74,28 +88,16 @@ func main() {
 			// after "--file", and so the next iteration of the
 			// loop doesn't include it in the allFiles list.
 			i++
-			logOutputFile = os.Args[i]
-			fmt.Println(logOutputFile)
+			logOutputStr = os.Args[i]
 		} else {
 			allFiles = append(allFiles, curr)
 			allFilesCtr++
 		}
 	}
 
-	if logOutputFile != "" {
-		logOutFp, err := os.OpenFile(
-			logOutputFile,
-			os.O_CREATE|os.O_APPEND|os.O_WRONLY,
-			0666,
-		)
-
-		if err != nil {
-			log.Printf("ERROR (log file): %s\n", err)
-			log.Println("Ignoring log file option...")
-		} else {
-			log.SetOutput(logOutFp)
-		}
-	}
+	// Run this function outside of the loop, so it only runs once.
+	// It's not like anyone is going to use multiple log files anyway.
+	tryLogOutputStr(logOutputStr)
 
 	for i := 0; i < allFilesCtr; i++ {
 		imgFile, err := os.Open(allFiles[i])
