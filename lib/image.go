@@ -1,5 +1,5 @@
 // image.go
-package imagelib
+package champlib
 
 import (
 	"image"

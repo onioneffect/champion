@@ -1,5 +1,5 @@
 // line.go
-package imagelib
+package champlib
 
 import (
 	"fmt"
