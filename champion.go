@@ -82,12 +82,29 @@ func main() {
 		}
 	}
 
+	if logOutputFile != "" {
+		logOutFp, err := os.OpenFile(
+			logOutputFile,
+			os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+			0666,
+		)
+
+		if err != nil {
+			log.Printf("ERROR (log file): %s\n", err)
+			log.Println("Ignoring log file option...")
+		} else {
+			log.SetOutput(logOutFp)
+		}
+	}
+
 	for i := 0; i < allFilesCtr; i++ {
 		imgFile, err := os.Open(allFiles[i])
 		if err != nil {
-			panic(err)
+			log.Printf("ERROR (image file): %s\n", err)
+			continue
 		}
 
+		log.Println("Successfully opened file", allFiles[i])
 		imgProcessor(imgFile, useDebugging)
 		imgFile.Close()
 	}
