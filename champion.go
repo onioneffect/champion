@@ -29,6 +29,7 @@ func imgProcessor(fp *os.File, debug bool) {
 	currentImg.Decoded = &currentDecoded
 
 	if debug {
+		log.Println("START")
 		log.Println("We are in debuggign mode!!! :D")
 
 		log.Println("Printing image information:")
@@ -39,6 +40,8 @@ func imgProcessor(fp *os.File, debug bool) {
 
 		log.Println("Running TestPixLoop:")
 		champlib.TestPixLoop(currentImg, 100)
+
+		log.Println("DONE")
 	}
 }
 
