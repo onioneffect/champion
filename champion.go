@@ -71,7 +71,10 @@ func main() {
 
 	// Run this function outside of the loop, so it only runs once.
 	// It's not like anyone is going to use multiple log files anyway.
-	tryLogOutputStr(logOutputStr)
+	if useDebugging {
+		log.Println("Calling tryLogOutputStr...")
+		tryLogOutputStr(logOutputStr)
+	}
 
 	for i := 0; i < allFilesCtr; i++ {
 		imgFile, err := os.Open(allFiles[i])
@@ -80,7 +83,9 @@ func main() {
 			continue
 		}
 
-		log.Println("Successfully opened file", allFiles[i])
+		if useDebugging {
+			log.Println("Successfully opened file", allFiles[i])
+		}
 		imgProcessor(imgFile, useDebugging)
 		imgFile.Close()
 	}
