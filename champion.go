@@ -55,7 +55,10 @@ func main() {
 	for i := 1; i < len(os.Args); i++ {
 		curr = os.Args[i]
 
-		if curr == "--debug" {
+		if curr == "--help" {
+			champlib.PrintHelp()
+			return
+		} else if curr == "--debug" {
 			useDebugging = true
 		} else if curr == "--file" {
 			// We increment i so it points to the argument right
