@@ -1,7 +1,10 @@
 // help.go
 package champlib
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 var helpMsg = [3][2]string{
 	{"help", "Print this message and exit"},
@@ -10,8 +13,11 @@ var helpMsg = [3][2]string{
 }
 
 func PrintHelp() {
+	fmt.Printf("USAGE: %s [options] [files]\n", os.Args[0])
+	fmt.Println("Available options:")
+
 	for i := 0; i < len(helpMsg); i++ {
-		fmt.Printf("--%s\t", helpMsg[i][0])
+		fmt.Printf("--%s: ", helpMsg[i][0])
 		fmt.Println(helpMsg[i][1])
 	}
 }
