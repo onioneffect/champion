@@ -2,6 +2,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 
@@ -46,31 +47,12 @@ func imgProcessor(fp *os.File, debug bool) {
 }
 
 func main() {
-	var allFiles []string
-	var allFilesCtr int = 0
-	var useDebugging bool = false
+	var useDebugging bool
 	var logOutputStr string
-	var curr string
 
-	for i := 1; i < len(os.Args); i++ {
-		curr = os.Args[i]
-
-		if curr == "--help" {
-			champlib.PrintHelp()
-			return
-		} else if curr == "--debug" {
-			useDebugging = true
-		} else if curr == "--file" {
-			// We increment i so it points to the argument right
-			// after "--file", and so the next iteration of the
-			// loop doesn't include it in the allFiles list.
-			i++
-			logOutputStr = os.Args[i]
-		} else {
-			allFiles = append(allFiles, curr)
-			allFilesCtr++
-		}
-	}
+	flag.BoolVar(&useDebugging, "debug", false, "enable logging")
+	flag.StringVar(&logOutputStr, "file", "", "specify where to write log output")
+	flag.Parse()
 
 	// Run this function outside of the loop, so it only runs once.
 	// It's not like anyone is going to use multiple log files anyway.
@@ -79,15 +61,15 @@ func main() {
 		tryLogOutputStr(logOutputStr)
 	}
 
-	for i := 0; i < allFilesCtr; i++ {
-		imgFile, err := os.Open(allFiles[i])
+	for i := 0; i < flag.NArg(); i++ {
+		imgFile, err := os.Open(flag.Args()[i])
 		if err != nil {
 			log.Printf("ERROR (image file): %s\n", err)
 			continue
 		}
 
 		if useDebugging {
-			log.Println("Successfully opened file", allFiles[i])
+			log.Println("Successfully opened file", flag.Args()[i])
 		}
 		imgProcessor(imgFile, useDebugging)
 		imgFile.Close()
