@@ -96,8 +96,6 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 
 	log.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
 	for y := 0; y < yLen; y++ {
-		// fmt.Println(isSame, y)
-
 		for x := 0; x < xLen; x++ {
 			if lastColor == empty {
 				log.Print("No last color!")
