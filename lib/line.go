@@ -89,21 +89,23 @@ func TestPixLoop(im ImageInfo, pixels int) {
 
 func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	decodedPtr := im.Decoded
-	// var currLine Line
-	var empty [3]int32
+	var currLine Line
 	var currColor, lastColor [3]int32
-	var isSame bool
+	var isSame, started bool
 
 	log.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
 	for y := 0; y < yLen; y++ {
 		for x := 0; x < xLen; x++ {
-			if lastColor == empty {
+			currColor = (*decodedPtr)[y][x]
+
+			if !started {
 				log.Print("No last color!")
+				started = true
+				lastColor = currColor
+				continue
 			}
 
-			currColor = (*decodedPtr)[y][x]
 			isSame = currColor == lastColor
-
 			if !isSame {
 				log.Print("Color changed!")
 			}
