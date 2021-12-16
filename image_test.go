@@ -41,8 +41,12 @@ func TestLineFormat(t *testing.T) {
 	}
 
 	for i, j := range testLines {
-		if actual := j.LineToString(); actual != expected[i] {
+		actual, err := j.LineToString()
+
+		if actual != expected[i] {
 			t.Error(actual, expected[i])
+		} else if err != nil {
+			t.Error(err)
 		}
 	}
 }

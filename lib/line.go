@@ -2,6 +2,7 @@
 package champlib
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -44,9 +45,16 @@ const simpleLineFMT string = `{` +
 // drawing complex paths. Exploiting this fact
 // is the most important thing for this project.
 
-func (l Line) LineToString() string {
+func (l Line) LineToString() (string, error) {
 	var b strings.Builder
 	var hColor string = l.RGBToHex()
+
+	// We don't check for start, because a line
+	// could reasonably start at coordinates 0, 0
+	if l.End == [2]int32{0, 0} {
+		log.Print("No end in sight!")
+		return "", errors.New("cannot stringify without end coordinates")
+	}
 
 	fmt.Fprintf(
 		// string builder and format string
@@ -61,11 +69,19 @@ func (l Line) LineToString() string {
 		l.End[0], l.End[1],
 	)
 
-	return b.String()
+	return b.String(), nil
 }
 
 func (l Line) Eq(cmp Line) bool {
 	return (l.HexColor == cmp.HexColor)
+}
+
+func (lp *Line) SetStart(x, y int32) {
+	(*lp).Start = [2]int32{x, y}
+}
+
+func (lp *Line) SetEnd(x, y int32) {
+	(*lp).End = [2]int32{x, y}
 }
 
 func (l Line) RGBToHex() string {
@@ -100,6 +116,10 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 
 			if !started {
 				log.Print("No last color!")
+
+				currLine.HexColor = currColor
+				currLine.SetStart(int32(x), int32(y))
+
 				started = true
 				lastColor = currColor
 				continue
