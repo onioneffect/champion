@@ -49,9 +49,11 @@ func imgProcessor(fp *os.File, debug bool) {
 func main() {
 	var useDebugging bool
 	var logOutputStr string
+	var sliceLength int
 
-	flag.BoolVar(&useDebugging, "debug", false, "enable logging")
-	flag.StringVar(&logOutputStr, "file", "", "specify where to write log output")
+	flag.BoolVar(&useDebugging, "debug", false, champlib.HelpDebug)
+	flag.StringVar(&logOutputStr, "file", "", champlib.HelpFile)
+	flag.IntVar(&sliceLength, "slice", 1024, champlib.HelpSlice)
 	flag.Parse()
 
 	// Run this function outside of the loop, so it only runs once.

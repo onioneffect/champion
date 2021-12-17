@@ -105,9 +105,14 @@ func TestPixLoop(im ImageInfo, pixels int) {
 
 func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	decodedPtr := im.Decoded
+
 	var currLine Line
+	var lPtr *Line = &currLine
+
 	var currColor, lastColor [3]int32
 	var isSame, started bool
+
+	lineSlice := make([]Line, 1024)
 
 	log.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
 	for y := 0; y < yLen; y++ {
@@ -118,7 +123,12 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				log.Print("No last color!")
 
 				currLine.HexColor = currColor
-				currLine.SetStart(int32(x), int32(y))
+				// Debugging purposes
+				lPtr.SetStart(int32(x), int32(y))
+				lPtr.SetEnd(111, 111)
+
+				lineSlice[0] = currLine
+				// /
 
 				started = true
 				lastColor = currColor
