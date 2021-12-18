@@ -29,36 +29,33 @@ func imgProcessor(fp *os.File, debug bool) {
 	var currentDecoded [][][3]int32 = champlib.ImageArray(currentImg)
 	currentImg.Decoded = &currentDecoded
 
-	if debug {
-		log.Println("START")
-		log.Println("We are in debuggign mode!!! :D")
+	champlib.ChampLog("START")
+	champlib.ChampLog("We are in debuggign mode!!! :D")
 
-		log.Println("Printing image information:")
-		champlib.LogImgInfo(currentImg)
+	champlib.ChampLog("Printing image information:")
+	champlib.LogImgInfo(currentImg)
 
-		log.Println("Printing array information:")
-		champlib.LogIntarrayInfo(currentImg.Decoded)
+	champlib.ChampLog("Printing array information:")
+	champlib.LogIntarrayInfo(currentImg.Decoded)
 
-		log.Println("Running TestPixLoop:")
-		champlib.TestPixLoop(currentImg, 100)
+	champlib.ChampLog("Running TestPixLoop:")
+	champlib.TestPixLoop(currentImg, 100)
 
-		log.Println("DONE")
-	}
+	champlib.ChampLog("DONE")
 }
 
 func main() {
-	var useDebugging bool
 	var logOutputStr string
 	var sliceLength int
 
-	flag.BoolVar(&useDebugging, "debug", false, champlib.HelpDebug)
+	flag.BoolVar(&champlib.LoggingEnabled, "debug", false, champlib.HelpDebug)
 	flag.StringVar(&logOutputStr, "file", "", champlib.HelpFile)
 	flag.IntVar(&sliceLength, "slice", 1024, champlib.HelpSlice)
 	flag.Parse()
 
 	// Run this function outside of the loop, so it only runs once.
 	// It's not like anyone is going to use multiple log files anyway.
-	if useDebugging {
+	if champlib.LoggingEnabled {
 		log.Println("Calling tryLogOutputStr...")
 		tryLogOutputStr(logOutputStr)
 	}
@@ -70,10 +67,8 @@ func main() {
 			continue
 		}
 
-		if useDebugging {
-			log.Println("Successfully opened file", flag.Args()[i])
-		}
-		imgProcessor(imgFile, useDebugging)
+		champlib.ChampLog("Successfully opened file ", flag.Args()[i])
+		imgProcessor(imgFile, champlib.LoggingEnabled)
 		imgFile.Close()
 	}
 }

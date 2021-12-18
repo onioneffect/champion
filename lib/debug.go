@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+var LoggingEnabled = false
+
 func LogIntarrayInfo(arrptr *[][][3]int32) {
 	log.Println("Array len:", len(*arrptr))
 	log.Println("Row len:", len((*arrptr)[0]))
@@ -31,5 +33,14 @@ func LogImgInfo(imginf ImageInfo) {
 		log.Println("First pixel:", firstPix[0])
 	} else {
 		log.Println("First pixel:", firstPix)
+	}
+}
+
+func ChampLog(v ...interface{}) bool {
+	if LoggingEnabled {
+		log.Print(v...)
+		return true
+	} else {
+		return false
 	}
 }
