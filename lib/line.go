@@ -14,6 +14,11 @@ type Line struct {
 	// Start and end are represented by x and y
 	// Two coordinates for each. Four numbers in total.
 	Start, End [2]int32
+
+	// StartInit and EndInit reflect if `Start`
+	// and `End` have been properly initialized.
+	// (We can't just compare each of them to 0,0)
+	StartInit, EndInit bool
 }
 
 // Characters used to encode numbers in hexadecimal
@@ -48,9 +53,10 @@ func (l Line) LineToString() (string, error) {
 	var b strings.Builder
 	var hColor string = l.RGBToHex()
 
-	// We don't check for start, because a line
-	// could reasonably start at coordinates 0, 0
-	if l.End == [2]int32{0, 0} {
+	if !l.StartInit {
+		ChampLog("No start coordinates specified!")
+		return "", errors.New("cannot stringify without start coordinates")
+	} else if !l.EndInit {
 		ChampLog("No end in sight!")
 		return "", errors.New("cannot stringify without end coordinates")
 	}
@@ -77,10 +83,12 @@ func (l Line) Eq(cmp Line) bool {
 
 func (lp *Line) SetStart(x, y int32) {
 	(*lp).Start = [2]int32{x, y}
+	(*lp).StartInit = true
 }
 
 func (lp *Line) SetEnd(x, y int32) {
 	(*lp).End = [2]int32{x, y}
+	(*lp).EndInit = true
 }
 
 func (l Line) RGBToHex() string {

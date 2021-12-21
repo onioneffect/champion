@@ -28,11 +28,16 @@ func TestLineEquality(t *testing.T) {
 
 // TODO: Include color compare in this function, maybe
 func TestLineFormat(t *testing.T) {
-	testLines := [3]champlib.Line{
-		{Start: [2]int32{0, 0}, End: [2]int32{0, 10}},
-		{Start: [2]int32{256, 256}, End: [2]int32{128, 1000}},
-		{Start: [2]int32{1000, 1000}, End: [2]int32{0, 0}},
-	}
+	testLines := [3]champlib.Line{}
+
+	testLines[0].SetStart(0, 0)
+	testLines[0].SetEnd(0, 10)
+
+	testLines[1].SetStart(256, 256)
+	testLines[1].SetEnd(128, 1000)
+
+	testLines[2].SetStart(1000, 1000)
+	testLines[2].SetEnd(0, 0)
 
 	expected := [3]string{
 		`{"thickness": 0.1,"color": "#000000","points": "0,0|0,10"}`,
