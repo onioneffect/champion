@@ -4,7 +4,6 @@ package champlib
 import (
 	"errors"
 	"fmt"
-	"log"
 	"strings"
 )
 
@@ -52,7 +51,7 @@ func (l Line) LineToString() (string, error) {
 	// We don't check for start, because a line
 	// could reasonably start at coordinates 0, 0
 	if l.End == [2]int32{0, 0} {
-		log.Print("No end in sight!")
+		ChampLog("No end in sight!")
 		return "", errors.New("cannot stringify without end coordinates")
 	}
 
@@ -114,13 +113,15 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 
 	lineSlice := make([]Line, 1024)
 
-	log.Printf("Looping through pixels: %dx%d\n", xLen, yLen)
+	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", xLen, yLen)
+	ChampLog(msg)
+
 	for y := 0; y < yLen; y++ {
 		for x := 0; x < xLen; x++ {
 			currColor = (*decodedPtr)[y][x]
 
 			if !started {
-				log.Print("No last color!")
+				ChampLog("No last color!")
 
 				currLine.HexColor = currColor
 				// Debugging purposes
@@ -137,7 +138,7 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 
 			isSame = currColor == lastColor
 			if !isSame {
-				log.Print("Color changed!")
+				ChampLog("Color changed!")
 			}
 
 			fmt.Println(currColor, x, y)
