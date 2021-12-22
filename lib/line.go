@@ -77,6 +77,21 @@ func (l Line) LineToString() (string, error) {
 	return b.String(), nil
 }
 
+func DebugLineSlice(DebugMe []Line, PrintMe bool) {
+	i := 0
+	for {
+		str, err := DebugMe[i].LineToString()
+		if err != nil {
+			break
+		} else if PrintMe {
+			ChampLog(str)
+		}
+		i++
+	}
+
+	ChampLog("Looped through ", i, " elements.")
+}
+
 func (l Line) Eq(cmp Line) bool {
 	return (l.HexColor == cmp.HexColor)
 }
@@ -119,6 +134,7 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	var currColor, lastColor [3]int32
 	var isSame, started bool
 
+	var lineSliceIndex int = 0
 	lineSlice := make([]Line, 1024)
 
 	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", xLen, yLen)
@@ -134,7 +150,6 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				currLine.HexColor = currColor
 				// Debugging purposes
 				lPtr.SetStart(int32(x), int32(y))
-				lPtr.SetEnd(111, 111)
 
 				lineSlice[0] = currLine
 				// /
@@ -147,10 +162,15 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 			isSame = currColor == lastColor
 			if !isSame {
 				ChampLog("Color changed!")
+				lPtr.SetEnd(int32(x), int32(y))
+				lineSlice[lineSliceIndex] = currLine
+				lineSliceIndex++
 			}
 
 			fmt.Println(currColor, x, y)
 			lastColor = currColor
 		}
 	}
+
+	DebugLineSlice(lineSlice, false)
 }
