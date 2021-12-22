@@ -148,11 +148,7 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				ChampLog("No last color!")
 
 				currLine.HexColor = currColor
-				// Debugging purposes
 				lPtr.SetStart(int32(x), int32(y))
-
-				lineSlice[0] = currLine
-				// /
 
 				started = true
 				lastColor = currColor
