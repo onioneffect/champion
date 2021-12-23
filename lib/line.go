@@ -161,12 +161,16 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				lPtr.SetEnd(int32(x), int32(y))
 				lineSlice[lineSliceIndex] = currLine
 				lineSliceIndex++
+
+				// Resets color and coordinates
+				currLine.SetStart(int32(x), int32(y))
+				currLine.HexColor = currColor
 			}
 
-			fmt.Println(currColor, x, y)
+			fmt.Printf("%dx%d: %v\n", x, y, currColor)
 			lastColor = currColor
 		}
 	}
 
-	DebugLineSlice(lineSlice, false)
+	DebugLineSlice(lineSlice, true)
 }
