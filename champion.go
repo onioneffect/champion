@@ -2,7 +2,10 @@
 package main
 
 import (
+	"errors"
 	"flag"
+	"fmt"
+	"image"
 	"log"
 	"os"
 
@@ -25,7 +28,14 @@ func tryLogOutputStr(path string) {
 }
 
 func imgProcessor(fp *os.File, debug bool) {
-	var currentImg champlib.ImageInfo = champlib.ReadImgInfo(fp)
+	currentImg, err := champlib.ReadImgInfo(fp)
+	if errors.Is(err, image.ErrFormat) {
+		msg := fmt.Sprintf("Unknown format on file `%s`! Skipping...", fp.Name())
+		fmt.Print(msg)
+		champlib.ChampLog(msg)
+		return
+	}
+
 	var currentDecoded [][][3]int32 = champlib.ImageArray(currentImg)
 	currentImg.Decoded = &currentDecoded
 

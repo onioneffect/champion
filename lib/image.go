@@ -41,12 +41,12 @@ func ImageArray(im ImageInfo) [][][3]int32 {
 	return iaa
 }
 
-func ReadImgInfo(imgReader *os.File) ImageInfo {
+func ReadImgInfo(imgReader *os.File) (ImageInfo, error) {
 	var returnInfo ImageInfo
 
 	config, format, err := image.DecodeConfig(imgReader)
 	if err != nil {
-		panic(err)
+		return ImageInfo{}, err
 	}
 
 	returnInfo.Height = config.Height
@@ -66,5 +66,5 @@ func ReadImgInfo(imgReader *os.File) ImageInfo {
 	returnInfo.Bounds = imgData.Bounds()
 	returnInfo.Data = &imgData
 
-	return returnInfo
+	return returnInfo, nil
 }

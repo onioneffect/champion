@@ -40,9 +40,9 @@ func TestLineFormat(t *testing.T) {
 	testLines[2].SetEnd(0, 0)
 
 	expected := [3]string{
-		`{"thickness": 0.1,"color": "#000000","points": "0,0|0,10"}`,
-		`{"thickness": 0.1,"color": "#000000","points": "256,256|128,1000"}`,
-		`{"thickness": 0.1,"color": "#000000","points": "1000,1000|0,0"}`,
+		`{"thickness":0.1,"color":"#000000","points":"0,0|0,10"}`,
+		`{"thickness":0.1,"color":"#000000","points":"256,256|128,1000"}`,
+		`{"thickness":0.1,"color":"#000000","points":"1000,1000|0,0"}`,
 	}
 
 	for i, j := range testLines {
@@ -119,7 +119,11 @@ func TestReadImgInfo(t *testing.T) {
 		}
 		defer fp.Close()
 
-		testImgInfo := champlib.ReadImgInfo(fp)
+		testImgInfo, err := champlib.ReadImgInfo(fp)
+
+		if err != nil {
+			t.Error(err)
+		}
 
 		if testImgInfo.Bounds != expected[i].Bounds {
 			t.Errorf("Mismatched bounds. Index %d", i)

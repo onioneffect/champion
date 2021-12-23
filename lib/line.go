@@ -40,9 +40,9 @@ var chars = [16]rune{
 // `points` are "x,y|x,y" for a straight line,
 // described by only two coordinates/points.
 const simpleLineFMT string = `{` +
-	`"thickness": 0.1,` +
-	`"color": "%s",` +
-	`"points": "%d,%d|%d,%d"` +
+	`"thickness":0.1,` +
+	`"color":"%s",` +
+	`"points":"%d,%d|%d,%d"` +
 	`}`
 
 // TODO: Using more than two points allows for
@@ -54,10 +54,10 @@ func (l Line) LineToString() (string, error) {
 	var hColor string = l.RGBToHex()
 
 	if !l.StartInit {
-		ChampLog("No start coordinates specified!")
+		// ChampLog("No start coordinates specified!")
 		return "", errors.New("cannot stringify without start coordinates")
 	} else if !l.EndInit {
-		ChampLog("No end in sight!")
+		// ChampLog("No end in sight!")
 		return "", errors.New("cannot stringify without end coordinates")
 	}
 
@@ -157,7 +157,8 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 
 			isSame = currColor == lastColor
 			if !isSame {
-				ChampLog("Color changed!")
+				ChampLog("Color changed! ", x, y)
+
 				lPtr.SetEnd(int32(x), int32(y))
 				lineSlice[lineSliceIndex] = currLine
 				lineSliceIndex++
@@ -167,10 +168,10 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				currLine.HexColor = currColor
 			}
 
-			fmt.Printf("%dx%d: %v\n", x, y, currColor)
 			lastColor = currColor
 		}
 	}
 
-	DebugLineSlice(lineSlice, true)
+	ChampLog("Calling DebugLineSlice")
+	DebugLineSlice(lineSlice, false)
 }
