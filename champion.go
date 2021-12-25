@@ -47,8 +47,8 @@ func imgProcessor(fp *os.File, debug bool) {
 	champlib.ChampLog("Printing array information:")
 	champlib.LogIntarrayInfo(currentImg.Decoded)
 
-	champlib.ChampLog("Running TestPixLoop:")
-	champlib.TestPixLoop(currentImg, 100)
+	champlib.ChampLog("Running main loop!")
+	champlib.ImagePixLoop(currentImg, currentImg.Width, currentImg.Height)
 
 	champlib.ChampLog("DONE")
 }

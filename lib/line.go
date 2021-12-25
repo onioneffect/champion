@@ -125,7 +125,7 @@ func TestPixLoop(im ImageInfo, pixels int) {
 	ImagePixLoop(im, pixels%im.Width, pixels/im.Width+1)
 }
 
-func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
+func ImagePixLoop(im ImageInfo, width int, height int) {
 	decodedPtr := im.Decoded
 
 	var currLine Line
@@ -135,13 +135,13 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 	var isSame, started bool
 
 	var lineSliceIndex int = 0
-	lineSlice := make([]Line, 1024)
+	lineSlice := make([]Line, 10000)
 
-	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", xLen, yLen)
+	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", width, height)
 	ChampLog(msg)
 
-	for y := 0; y < yLen; y++ {
-		for x := 0; x < xLen; x++ {
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
 			currColor = (*decodedPtr)[y][x]
 
 			if !started {
@@ -168,10 +168,21 @@ func ImagePixLoop(im ImageInfo, xLen int, yLen int) {
 				currLine.HexColor = currColor
 			}
 
+			if x == width-1 && y == height-1 {
+				msg := fmt.Sprintf("Reached end! %dx%d", x, y)
+				ChampLog(msg)
+
+				lPtr.SetEnd(int32(x), int32(y))
+				lineSlice[lineSliceIndex] = currLine
+				lineSliceIndex++
+
+				break
+			}
+
 			lastColor = currColor
 		}
 	}
 
 	ChampLog("Calling DebugLineSlice")
-	DebugLineSlice(lineSlice, false)
+	DebugLineSlice(lineSlice, true)
 }
