@@ -121,11 +121,7 @@ func (l Line) RGBToHex() string {
 	return sb.String()
 }
 
-func TestPixLoop(im ImageInfo, pixels int) {
-	ImagePixLoop(im, pixels%im.Width, pixels/im.Width+1)
-}
-
-func ImagePixLoop(im ImageInfo, width int, height int) {
+func ImagePixLoop(im ImageInfo, width int, height int) []Line {
 	decodedPtr := im.Decoded
 
 	var currLine Line
@@ -179,6 +175,5 @@ func ImagePixLoop(im ImageInfo, width int, height int) {
 		}
 	}
 
-	ChampLog("Calling DebugLineSlice")
-	DebugLineSlice(lineSlice, true)
+	return lineSlice
 }

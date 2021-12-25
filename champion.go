@@ -48,7 +48,10 @@ func imgProcessor(fp *os.File, debug bool) {
 	champlib.LogIntarrayInfo(currentImg.Decoded)
 
 	champlib.ChampLog("Running main loop!")
-	champlib.ImagePixLoop(currentImg, currentImg.Width, currentImg.Height)
+	mySlice := champlib.ImagePixLoop(currentImg, currentImg.Width, currentImg.Height)
+
+	champlib.ChampLog("Calling DebugLineSlice:")
+	champlib.DebugLineSlice(mySlice, true)
 
 	champlib.ChampLog("DONE")
 }
