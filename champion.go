@@ -12,6 +12,10 @@ import (
 	champlib "github.com/onioneffect/champion/lib"
 )
 
+type Settings struct {
+	SliceLen int
+}
+
 func tryLogOutputStr(path string) {
 	filePtr, err := os.OpenFile(
 		path,
@@ -27,7 +31,7 @@ func tryLogOutputStr(path string) {
 	}
 }
 
-func imgProcessor(fp *os.File, debug bool) {
+func imgProcessor(fp *os.File) {
 	currentImg, err := champlib.ReadImgInfo(fp)
 	if errors.Is(err, image.ErrFormat) {
 		msg := fmt.Sprintf("Unknown format on file `%s`! Skipping...", fp.Name())
@@ -48,7 +52,7 @@ func imgProcessor(fp *os.File, debug bool) {
 	champlib.LogIntarrayInfo(currentImg.Decoded)
 
 	champlib.ChampLog("Running main loop!")
-	mySlice := champlib.ImagePixLoop(currentImg, currentImg.Width, currentImg.Height)
+	mySlice := champlib.ImagePixLoop(currentImg)
 
 	champlib.ChampLog("Calling DebugLineSlice:")
 	champlib.DebugLineSlice(mySlice, true)
@@ -80,7 +84,7 @@ func main() {
 		}
 
 		champlib.ChampLog("Successfully opened file ", flag.Args()[i])
-		imgProcessor(imgFile, champlib.LoggingEnabled)
+		imgProcessor(imgFile)
 		imgFile.Close()
 	}
 }

@@ -121,8 +121,10 @@ func (l Line) RGBToHex() string {
 	return sb.String()
 }
 
-func ImagePixLoop(im ImageInfo, width int, height int) []Line {
+func ImagePixLoop(im ImageInfo) []Line {
 	decodedPtr := im.Decoded
+	var height int = im.Height
+	var width int = im.Width
 
 	var currLine Line
 	var lPtr *Line = &currLine
