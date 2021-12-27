@@ -76,6 +76,14 @@ func imgProcessor(fp *os.File) {
 	champlib.ChampLog("Calling DebugLineSlice:")
 	champlib.DebugLineSlice(mySlice, true)
 
+	// TODO: Custom output dir
+	champlib.ChampLog("Generating output filename:")
+	s, err := champlib.GenerateFilename("outputs", fp.Name())
+	if err != nil {
+		panic(err)
+	}
+	champlib.ChampLog(s)
+
 	champlib.ChampLog("DONE")
 }
 

@@ -20,7 +20,44 @@
 
 package champlib
 
-import "os"
+import (
+	"errors"
+	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+func GenerateFilename(outDir string, inputName string) (string, error) {
+	_, err := os.Stat("outputs")
+	if os.IsNotExist(err) {
+		err = os.Mkdir("outputs", 0755)
+		if err != nil {
+			ChampLog(err)
+			return "", err
+		}
+	}
+
+	listing, err := ioutil.ReadDir("outputs")
+	if err != nil {
+		ChampLog(err)
+	}
+
+	// TODO: Handle file already exists.
+	for i := range listing {
+		if listing[i].Name() == inputName {
+			return "", errors.New("file already exists")
+		}
+	}
+
+	nameBase := filepath.Base(inputName)
+	nameExt := filepath.Ext(inputName)
+	trimmedFileName := strings.TrimSuffix(nameBase, nameExt)
+	formattedOutput := fmt.Sprintf("%s-output.txt", trimmedFileName)
+
+	return filepath.Join(outDir, formattedOutput), nil
+}
 
 func WriteLineSlice(slicePtr *[]Line, fp os.File) error {
 	return nil
