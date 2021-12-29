@@ -98,14 +98,13 @@ func (l Line) LineToString() (string, error) {
 
 func DebugLineSlice(DebugMe []Line, PrintMe bool) {
 	i := 0
-	for {
+	for ; i < len(DebugMe); i++ {
 		str, err := DebugMe[i].LineToString()
 		if err != nil {
 			break
 		} else if PrintMe {
 			ChampLog(str)
 		}
-		i++
 	}
 
 	ChampLog("Looped through ", i, " elements.")
@@ -150,7 +149,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 
 	var currColor, lastColor [3]int32
 	var isSame, started bool
-	var lineSlice []Line = make([]Line, 1024)
+	var lineSlice []Line
 
 	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", width, height)
 	ChampLog(msg)
@@ -172,10 +171,9 @@ func ImagePixLoop(im ImageInfo) []Line {
 
 			isSame = currColor == lastColor
 			if !isSame {
-				ChampLog("Color changed! ", x, y)
-
 				lPtr.SetEnd(int32(x), int32(y))
 				lineSlice = append(lineSlice, currLine)
+				// ChampLog(currLine, len(lineSlice))
 
 				// Resets color and coordinates
 				currLine.SetStart(int32(x), int32(y))
