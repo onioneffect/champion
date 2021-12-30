@@ -59,6 +59,34 @@ func GenerateFilename(outDir string, inputName string) (string, error) {
 	return filepath.Join(outDir, formattedOutput), nil
 }
 
-func WriteLineSlice(slicePtr *[]Line, fp os.File) error {
+func WriteLineSlice(slicePtr *[]Line, fileName string) error {
+	var formattedStr string
+
+	fp, err := os.OpenFile(
+		fileName,
+		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+		0666,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for i, j := range *slicePtr {
+		str, err := j.LineToString()
+		if err != nil {
+			return err
+		}
+
+		if i == 0 {
+			formattedStr = fmt.Sprintf("[%s,", str)
+		} else if i == len(*slicePtr)-1 {
+			formattedStr = fmt.Sprintf("%s]", str)
+		} else {
+			formattedStr = fmt.Sprintf("%s, ", str)
+		}
+		fp.WriteString(formattedStr)
+	}
+
 	return nil
 }
