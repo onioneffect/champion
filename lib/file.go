@@ -60,8 +60,6 @@ func GenerateFilename(outDir string, inputName string) (string, error) {
 }
 
 func WriteLineSlice(slicePtr *[]Line, fileName string) error {
-	var formattedStr string
-
 	fp, err := os.OpenFile(
 		fileName,
 		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
@@ -72,20 +70,33 @@ func WriteLineSlice(slicePtr *[]Line, fileName string) error {
 		return err
 	}
 
-	for i, j := range *slicePtr {
-		str, err := j.LineToString()
+	writeFunc := func(format string, argument Line) error {
+		var formattedStr string
+
+		str, err := argument.LineToString()
 		if err != nil {
 			return err
 		}
 
-		if i == 0 {
-			formattedStr = fmt.Sprintf("[%s,", str)
-		} else if i == len(*slicePtr)-1 {
-			formattedStr = fmt.Sprintf("%s]", str)
-		} else {
-			formattedStr = fmt.Sprintf("%s, ", str)
-		}
+		formattedStr = fmt.Sprintf(format, str)
 		fp.WriteString(formattedStr)
+
+		return nil
+	}
+
+	// Write the first argument
+	writeFunc("[%s,", (*slicePtr)[0])
+
+	// Then move onto the loop
+	var f string
+	for i := 1; i < len(*slicePtr); i++ {
+		if i == len(*slicePtr)-1 {
+			f = "%s]"
+		} else {
+			f = "%s,"
+		}
+
+		writeFunc(f, (*slicePtr)[i])
 	}
 
 	return nil
