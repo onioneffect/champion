@@ -1,6 +1,6 @@
 /*
 	help.go: Short pieces of authoritative insight.
-	Copyright (C) 2021  onioneffect
+	Copyright (C) 2021-2022  onioneffect
 
 	This file is part of Champion.
 

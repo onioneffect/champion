@@ -1,6 +1,6 @@
 /*
 	debug.go: Print program state information.
-	Copyright (C) 2021  onioneffect
+	Copyright (C) 2021-2022  onioneffect
 
 	This file is part of Champion.
 
