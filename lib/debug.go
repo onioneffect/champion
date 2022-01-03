@@ -24,9 +24,25 @@ import (
 	"fmt"
 	"image/color"
 	"log"
+	"os"
 )
 
 var LoggingEnabled = false
+
+func TryLogOutputStr(path string) {
+	filePtr, err := os.OpenFile(
+		path,
+		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+		0666,
+	)
+
+	if err != nil {
+		log.Printf("ERROR (log file): %s\n", err)
+		log.Println("Ignoring log file option...")
+	} else {
+		log.SetOutput(filePtr)
+	}
+}
 
 func LogIntarrayInfo(arrptr *[][][3]int32) {
 	ChampLog("Array len: ", len(*arrptr))

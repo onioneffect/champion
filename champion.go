@@ -25,7 +25,6 @@ import (
 	"flag"
 	"fmt"
 	"image"
-	"log"
 	"os"
 
 	champlib "github.com/onioneffect/champion/lib"
@@ -33,21 +32,6 @@ import (
 
 type Settings struct {
 	SliceLen int
-}
-
-func tryLogOutputStr(path string) {
-	filePtr, err := os.OpenFile(
-		path,
-		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
-		0666,
-	)
-
-	if err != nil {
-		log.Printf("ERROR (log file): %s\n", err)
-		log.Println("Ignoring log file option...")
-	} else {
-		log.SetOutput(filePtr)
-	}
 }
 
 func imgProcessor(fp *os.File) {
@@ -103,14 +87,14 @@ func main() {
 	// Run this function outside of the loop, so it only runs once.
 	// It's not like anyone is going to use multiple log files anyway.
 	if champlib.LoggingEnabled {
-		log.Println("Calling tryLogOutputStr...")
-		tryLogOutputStr(logOutputStr)
+		champlib.ChampLog("Calling TryLogOutputStr...")
+		champlib.TryLogOutputStr(logOutputStr)
 	}
 
 	for i := 0; i < flag.NArg(); i++ {
 		imgFile, err := os.Open(flag.Args()[i])
 		if err != nil {
-			log.Printf("ERROR (image file): %s\n", err)
+			champlib.ChampLog("ERROR (image file): %s\n", err)
 			continue
 		}
 
