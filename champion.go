@@ -95,11 +95,9 @@ func imgProcessor(fp *os.File) {
 
 func main() {
 	var logOutputStr string
-	var sliceLength int
 
 	flag.BoolVar(&champlib.LoggingEnabled, "debug", false, champlib.HelpDebug)
 	flag.StringVar(&logOutputStr, "file", "", champlib.HelpFile)
-	flag.IntVar(&sliceLength, "slice", 1024, champlib.HelpSlice)
 	flag.Parse()
 
 	// Run this function outside of the loop, so it only runs once.
