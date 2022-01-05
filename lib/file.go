@@ -31,7 +31,7 @@ import (
 )
 
 type LineWriteType struct {
-	HexColor   [3]int32
+	HexColor   [3]uint8
 	Start, End [2]int32
 }
 
@@ -126,9 +126,14 @@ func WriteLineSliceEncoded(slicePtr *[]Line, fileName string) error {
 		LoopedLine = (*slicePtr)[i]
 
 		WriteMe = LineWriteType{
-			HexColor: LoopedLine.HexColor,
-			Start:    LoopedLine.Start,
-			End:      LoopedLine.End,
+			Start: LoopedLine.Start,
+			End:   LoopedLine.End,
+		}
+
+		WriteMe.HexColor = [3]uint8{
+			uint8(LoopedLine.HexColor[0]),
+			uint8(LoopedLine.HexColor[1]),
+			uint8(LoopedLine.HexColor[2]),
 		}
 
 		err = binary.Write(fp, binary.LittleEndian, WriteMe)
