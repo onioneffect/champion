@@ -69,7 +69,14 @@ func imgProcessor(fp *os.File) {
 	champlib.ChampLog(s)
 
 	champlib.ChampLog("Calling WriteLineSlice:")
-	err = champlib.WriteLineSlice(&mySlice, s)
+	err = champlib.WriteLineSlicePlain(&mySlice, s)
+	if err != nil {
+		panic(err)
+	}
+
+	s2 := fmt.Sprintf("%s.bin", s)
+	champlib.ChampLog("Calling WriteLineSliceEncoded:")
+	err = champlib.WriteLineSliceEncoded(&mySlice, s2)
 	if err != nil {
 		panic(err)
 	}

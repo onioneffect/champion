@@ -21,6 +21,7 @@
 package champlib
 
 import (
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -28,6 +29,11 @@ import (
 	"path/filepath"
 	"strings"
 )
+
+type LineWriteType struct {
+	HexColor   [3]int32
+	Start, End [2]int32
+}
 
 func GenerateFilename(outDir string, inputName string) (string, error) {
 	_, err := os.Stat("outputs")
@@ -59,7 +65,7 @@ func GenerateFilename(outDir string, inputName string) (string, error) {
 	return filepath.Join(outDir, formattedOutput), nil
 }
 
-func WriteLineSlice(slicePtr *[]Line, fileName string) error {
+func WriteLineSlicePlain(slicePtr *[]Line, fileName string) error {
 	fp, err := os.OpenFile(
 		fileName,
 		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
@@ -97,6 +103,38 @@ func WriteLineSlice(slicePtr *[]Line, fileName string) error {
 		}
 
 		writeFunc(f, (*slicePtr)[i])
+	}
+
+	return nil
+}
+
+func WriteLineSliceEncoded(slicePtr *[]Line, fileName string) error {
+	var WriteMe LineWriteType
+	var LoopedLine Line
+
+	fp, err := os.OpenFile(
+		fileName,
+		os.O_CREATE|os.O_APPEND|os.O_WRONLY,
+		0666,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(*slicePtr); i++ {
+		LoopedLine = (*slicePtr)[i]
+
+		WriteMe = LineWriteType{
+			HexColor: LoopedLine.HexColor,
+			Start:    LoopedLine.Start,
+			End:      LoopedLine.End,
+		}
+
+		err = binary.Write(fp, binary.LittleEndian, WriteMe)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
