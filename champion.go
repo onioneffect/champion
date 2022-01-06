@@ -101,7 +101,8 @@ func main() {
 	for i := 0; i < flag.NArg(); i++ {
 		imgFile, err := os.Open(flag.Args()[i])
 		if err != nil {
-			champlib.ChampLog("ERROR (image file): %s\n", err)
+			msg := fmt.Sprintf("ERROR (image file): %s\n", err)
+			champlib.ChampLog(msg)
 			continue
 		}
 
