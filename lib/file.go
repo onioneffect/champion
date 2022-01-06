@@ -35,12 +35,11 @@ type LineWriteType struct {
 	Start, End [2]int32
 }
 
-func GenerateFilename(outDir string, inputName string) (string, error) {
+func GenerateFilename(outDir, inputName string) (string, error) {
 	_, err := os.Stat("outputs")
 	if os.IsNotExist(err) {
 		err = os.Mkdir("outputs", 0755)
 		if err != nil {
-			ChampLog(err)
 			return "", err
 		}
 	}
