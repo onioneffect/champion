@@ -189,8 +189,8 @@ func ImagePixLoop(im ImageInfo) []Line {
 
 				FinishLine(x, y)
 				break
-			} else if x == width-1 {
-				msg := fmt.Sprintf("Reached end of line %d!", x)
+			} else if y == width-1 {
+				//msg := fmt.Sprintf("Reached end of line %d!", x)
 				ChampLog(msg)
 
 				FinishLine(x, y)
