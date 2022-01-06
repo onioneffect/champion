@@ -114,13 +114,13 @@ func (l Line) Eq(cmp Line) bool {
 	return (l.HexColor == cmp.HexColor)
 }
 
-func (lp *Line) SetStart(x, y int32) {
-	(*lp).Start = [2]int32{x, y}
+func (lp *Line) SetStart(x, y int) {
+	(*lp).Start = [2]int32{int32(x), int32(y)}
 	(*lp).StartInit = true
 }
 
-func (lp *Line) SetEnd(x, y int32) {
-	(*lp).End = [2]int32{x, y}
+func (lp *Line) SetEnd(x, y int) {
+	(*lp).End = [2]int32{int32(x), int32(y)}
 	(*lp).EndInit = true
 }
 
@@ -151,7 +151,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 	var isSame, started bool
 	var lineSlice []Line
 
-	FinishLine := func(x, y int32) {
+	FinishLine := func(x, y int) {
 		lPtr.SetEnd(x, y)
 		lineSlice = append(lineSlice, currLine)
 	}
@@ -167,7 +167,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 				ChampLog("No last color!")
 
 				currLine.HexColor = currColor
-				lPtr.SetStart(int32(x), int32(y))
+				lPtr.SetStart(x, y)
 
 				started = true
 				lastColor = currColor
@@ -176,11 +176,10 @@ func ImagePixLoop(im ImageInfo) []Line {
 
 			isSame = currColor == lastColor
 			if !isSame {
-				FinishLine(int32(x), int32(y))
-				// ChampLog(currLine, len(lineSlice))
+				FinishLine(x, y)
 
 				// Resets color and coordinates
-				currLine.SetStart(int32(x), int32(y))
+				currLine.SetStart(x, y)
 				currLine.HexColor = currColor
 			}
 
@@ -188,7 +187,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 				msg := fmt.Sprintf("Reached end! %dx%d", x, y)
 				ChampLog(msg)
 
-				FinishLine(int32(x), int32(y))
+				FinishLine(x, y)
 				break
 			}
 
