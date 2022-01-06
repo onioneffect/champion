@@ -151,6 +151,11 @@ func ImagePixLoop(im ImageInfo) []Line {
 	var isSame, started bool
 	var lineSlice []Line
 
+	FinishLine := func(x, y int32) {
+		lPtr.SetEnd(x, y)
+		lineSlice = append(lineSlice, currLine)
+	}
+
 	msg := fmt.Sprintf("Looping through pixels: %dx%d\n", width, height)
 	ChampLog(msg)
 
@@ -171,8 +176,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 
 			isSame = currColor == lastColor
 			if !isSame {
-				lPtr.SetEnd(int32(x), int32(y))
-				lineSlice = append(lineSlice, currLine)
+				FinishLine(int32(x), int32(y))
 				// ChampLog(currLine, len(lineSlice))
 
 				// Resets color and coordinates
@@ -184,9 +188,7 @@ func ImagePixLoop(im ImageInfo) []Line {
 				msg := fmt.Sprintf("Reached end! %dx%d", x, y)
 				ChampLog(msg)
 
-				lPtr.SetEnd(int32(x), int32(y))
-				lineSlice = append(lineSlice, currLine)
-
+				FinishLine(int32(x), int32(y))
 				break
 			}
 
