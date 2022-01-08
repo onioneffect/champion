@@ -35,6 +35,22 @@ type LineWriteType struct {
 	Start, End [2]int32
 }
 
+func fileTrim(inputName string) string {
+	nameBase := filepath.Base(inputName)
+	nameExt := filepath.Ext(inputName)
+	return strings.TrimSuffix(nameBase, nameExt)
+}
+
+/*
+func generateDupeFilename(outDir, trimmed string, allFiles *[]os.FileInfo) (string, error) {
+	l := len(*allFiles)
+
+	// Since the slice is sorted, we'll start at the end
+	// so the first dupe found is also the highest index
+	for i := l; i > 0; i-- {}
+}
+*/
+
 func GenerateFilename(outDir, inputName string) (string, error) {
 	_, err := os.Stat("outputs")
 	if os.IsNotExist(err) {
@@ -47,19 +63,18 @@ func GenerateFilename(outDir, inputName string) (string, error) {
 	listing, err := ioutil.ReadDir("outputs")
 	if err != nil {
 		ChampLog(err)
+		return "", err
 	}
 
-	// TODO: Handle file already exists.
+	trimmedFileName := fileTrim(inputName)
+	formattedOutput := fmt.Sprintf("%s-output.txt", trimmedFileName)
+
 	for i := range listing {
 		if listing[i].Name() == inputName {
+			// return generateDupeFilename(outDir, trimmedFileName, &listing)
 			return "", errors.New("file already exists")
 		}
 	}
-
-	nameBase := filepath.Base(inputName)
-	nameExt := filepath.Ext(inputName)
-	trimmedFileName := strings.TrimSuffix(nameBase, nameExt)
-	formattedOutput := fmt.Sprintf("%s-output.txt", trimmedFileName)
 
 	return filepath.Join(outDir, formattedOutput), nil
 }
