@@ -81,3 +81,17 @@ func ChampLog(v ...interface{}) bool {
 		return false
 	}
 }
+
+func DebugLineSlice(DebugMe []Line, PrintMe bool) {
+	i := 0
+	for ; i < len(DebugMe); i++ {
+		str, err := DebugMe[i].LineToString()
+		if err != nil {
+			break
+		} else if PrintMe {
+			ChampLog(str)
+		}
+	}
+
+	ChampLog("Looped through ", i, " elements.")
+}

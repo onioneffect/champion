@@ -96,20 +96,6 @@ func (l Line) LineToString() (string, error) {
 	return b.String(), nil
 }
 
-func DebugLineSlice(DebugMe []Line, PrintMe bool) {
-	i := 0
-	for ; i < len(DebugMe); i++ {
-		str, err := DebugMe[i].LineToString()
-		if err != nil {
-			break
-		} else if PrintMe {
-			ChampLog(str)
-		}
-	}
-
-	ChampLog("Looped through ", i, " elements.")
-}
-
 func (l Line) Eq(cmp Line) bool {
 	return (l.HexColor == cmp.HexColor)
 }
