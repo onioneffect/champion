@@ -27,6 +27,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+
+	// "regexp"
 	"strings"
 )
 
@@ -42,12 +44,27 @@ func fileTrim(inputName string) string {
 }
 
 /*
+// Does this work? IDK.
 func generateDupeFilename(outDir, trimmed string, allFiles *[]os.FileInfo) (string, error) {
-	l := len(*allFiles)
+	var found string
+	var l int = len(*allFiles)
+
+	re, err := regexp.Compile(`-\d*\.`)
+	if err != nil {
+		return "", err
+	}
 
 	// Since the slice is sorted, we'll start at the end
 	// so the first dupe found is also the highest index
-	for i := l; i > 0; i-- {}
+	for i := l; i > 0; i-- {
+		s := (*allFiles)[i].Name()
+		match := re.FindStringIndex(s)
+		found = s[match[0]+1 : match[1]-1]
+
+		fmt.Println("Index found:", found)
+	}
+
+	return found, nil
 }
 */
 
@@ -70,7 +87,8 @@ func GenerateFilename(outDir, inputName string) (string, error) {
 	formattedOutput := fmt.Sprintf("%s-output.txt", trimmedFileName)
 
 	for i := range listing {
-		if listing[i].Name() == inputName {
+		ChampLog(">>> ", fileTrim(listing[i].Name()), " ", fileTrim(inputName))
+		if fileTrim(listing[i].Name()) == fileTrim(inputName)+"-output" {
 			// return generateDupeFilename(outDir, trimmedFileName, &listing)
 			return "", errors.New("file already exists")
 		}
