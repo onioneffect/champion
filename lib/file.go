@@ -41,16 +41,6 @@ func fileTrim(inputName string) string {
 	return strings.TrimSuffix(nameBase, nameExt)
 }
 
-/*
-func generateDupeFilename(outDir, trimmed string, allFiles *[]os.FileInfo) (string, error) {
-	l := len(*allFiles)
-
-	// Since the slice is sorted, we'll start at the end
-	// so the first dupe found is also the highest index
-	for i := l; i > 0; i-- {}
-}
-*/
-
 func GenerateFilename(outDir, inputName string) (string, error) {
 	_, err := os.Stat("outputs")
 	if os.IsNotExist(err) {
@@ -70,9 +60,8 @@ func GenerateFilename(outDir, inputName string) (string, error) {
 	formattedOutput := fmt.Sprintf("%s-output.txt", trimmedFileName)
 
 	for i := range listing {
-		if listing[i].Name() == inputName {
-			// return generateDupeFilename(outDir, trimmedFileName, &listing)
-			return "", errors.New("file already exists")
+		if fileTrim(listing[i].Name()) == fileTrim(inputName)+"-output" {
+			return "", errors.New("file already exists") // TODO this
 		}
 	}
 
