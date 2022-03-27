@@ -27,6 +27,6 @@ https://www.youtube.com/watch?v=cZ9gIoIy5No
 9. Profit
 
 ## TODO:
-* Rewrite entire program in a single language
+* ~~Rewrite entire program in a single language~~
 * Write a proxy server to make the whole process easier
 * Add different encoding for images (Gartic and TeeKO)
