@@ -1,4 +1,4 @@
-import re, sys
+import re, sys, os, time
 from PIL import Image, ImageDraw
 from datetime import datetime
 
@@ -40,6 +40,17 @@ class LineObj:
         coords = [int(i) for i in matches[3].split(',')]
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
+
+def clean_files(dir : str):
+    ls = os.listdir(dir)
+
+    unix = int(time.time())
+    out_dir = dir + '/' + str(unix)
+    os.mkdir(out_dir)
+
+    for filename in ls:
+        if filename.startswith("IGOR-"):
+            os.rename(dir + '/' + filename, out_dir + '/' + filename)
 
 def view_line(obj : LineObj):
     im = Image.new('RGB', (600, 600), (255, 255, 255))
@@ -109,4 +120,6 @@ if __name__ == "__main__":
         ret = read_file(sys.argv[1])
     
     save_list(ret)
+    clean_files("out")
+
     sys.exit(0)
