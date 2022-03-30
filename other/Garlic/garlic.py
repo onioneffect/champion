@@ -52,16 +52,6 @@ def clean_files(dir : str):
         if filename.startswith("IGOR-"):
             os.rename(dir + '/' + filename, out_dir + '/' + filename)
 
-def view_line(obj : LineObj):
-    im = Image.new('RGB', (600, 600), (255, 255, 255))
-    d = ImageDraw.Draw(im)
-
-    for pix in obj.pixels:
-        x, y = pix[0], pix[1]
-        d.ellipse((x, y, x+5, y+5), fill = 'black')
-
-    im.show()
-
 def save_list(obj_list : list):
     for i, j in enumerate(obj_list):
         im = Image.new('RGB', (600, 600), (255, 255, 255))
@@ -74,8 +64,7 @@ def save_list(obj_list : list):
         im.save("out/IGOR-{}.jpg".format(i))
 
 def pretty_print(obj_list : list):
-    for line in obj_list:
-        print(line)
+    print(line for line in obj_list)
 
 def decode(line_list : list) -> list:
     decoded_list = []
