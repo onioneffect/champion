@@ -11,20 +11,6 @@ class LineObj:
 
     pixels = []
 
-    def __str__(self):
-        s = ""
-        if self.good_salt:
-            s += '#'
-        else:
-            s += '!'
-
-        unix = datetime.fromtimestamp(self.joined/1000)
-        s += unix.strftime("%m%d-%H%M-")
-
-        s += str(len(self.pixels))
-
-        return s
-
     def __init__(self, matches : tuple):
         """There's two different formats. See below."""
         # self.salt = [int(i) for i in [matches[0], matches[1], matches[3]]]
@@ -67,29 +53,20 @@ def save_list(obj_list : list):
 
         im.save("out/IGOR-{}.jpg".format(i))
 
-def pretty_print(obj_list : list):
-    print(line for line in obj_list)
-
 def decode(line_list : list) -> list:
     decoded_list = []
 
-    """
-    There's two different formats:
-    The first one (commented out) includes a unix timestamp
-    of when YOU (person reading this) joined the Gartic lobby
-    """
-    # reg = "(\d*)\[(\d*),(\d*),\[(\d*),(.*)\]\]"
+    # This regex matches the unix timestamp right after the 42
+    # use it to tell if it's your own drawing or someone else's
+    detector = "^(?:\d+)\[(\d+),10"
 
-    """
-    This second format doesn't have the unix timestamp
-    it's the format used for everyone else
-    """
-    reg = "(\d*)\[(\d*),\[(\d*),(.*)\]\]"
+    # reg_me = "(\d+)\[(\d+),(\d+),\[(\d+),(.+)\]\]"
+    reg_others = "(\d+)\[(\d+),\[(\d+),(.+)\]\]"
 
     for s in line_list:
         if s.startswith('#'): continue
 
-        found = re.findall(reg, s)[0]
+        found = re.findall(reg_others, s)[0]
 
         curr_obj = LineObj(found)
         decoded_list.append(curr_obj)
