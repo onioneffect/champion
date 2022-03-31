@@ -57,10 +57,10 @@ def clean_files(dir : str):
             os.rename(dir + '/' + filename, out_dir + '/' + filename)
 
 def save_list(obj_list : list):
-    for i, j in enumerate(obj_list):
-        im = Image.new('RGB', (600, 600), (255, 255, 255))
-        d = ImageDraw.Draw(im)
+    im = Image.new('RGB', (600, 600), (255, 255, 255))
+    d = ImageDraw.Draw(im)
 
+    for i, j in enumerate(obj_list):
         for pix in j.pixels:
             x, y = [*pix]
             d.ellipse((x, y, x+5, y+5), fill = 'black')
