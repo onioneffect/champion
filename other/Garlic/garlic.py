@@ -3,18 +3,20 @@ from PIL import Image, ImageDraw
 from datetime import datetime
 
 class LineObj:
+    MY_DRAWING = 1
+    SOMEONE_ELSES = 2
+
     salt = []
     expected_salt = [42, 10, 2]
     good_salt = False
 
+    owner = 0
     joined = 0
 
     pixels = []
 
     def __init__(self, matches : tuple):
-        """There's two different formats. See below."""
-        # self.salt = [int(i) for i in [matches[0], matches[1], matches[3]]]
-        self.salt = [int(i) for i in [matches[0], matches[1], matches[2]]]
+        self.salt = [int(i) for i in [matches[0], matches[2], matches[3]]]
 
         if self.salt != self.expected_salt:
             print("WARNING: Salt does not match expected values!", file=sys.stderr)
@@ -22,11 +24,15 @@ class LineObj:
         else:
             self.good_salt = True
 
-        self.joined = int(matches[2])
+
+        if matches[1]:
+            self.joined = int(matches[1])
+            self.owner = LineObj.MY_DRAWING
+        else:
+            self.owner = LineObj.SOMEONE_ELSES
 
         """There's two different formats. See below."""
-        # coords = [int(i) for i in matches[4].split(',')]
-        coords = [int(i) for i in matches[3].split(',')]
+        coords = [int(i) for i in matches[4].split(',')]
 
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
@@ -51,22 +57,22 @@ def save_list(obj_list : list):
             x, y = [*pix]
             d.ellipse((x, y, x+5, y+5), fill = 'black')
 
+            if j.owner == LineObj.MY_DRAWING:
+                d.ellipse((10, 10, 20, 20), fill = 'red')
+            elif j.owner == LineObj.SOMEONE_ELSES:
+                d.ellipse((10, 10, 20, 20), fill = 'blue')
+
         im.save("out/IGOR-{}.jpg".format(i))
 
 def decode(line_list : list) -> list:
     decoded_list = []
 
-    # This regex matches the unix timestamp right after the 42
-    # use it to tell if it's your own drawing or someone else's
-    detector = "^(?:\d+)\[(\d+),10"
-
-    # reg_me = "(\d+)\[(\d+),(\d+),\[(\d+),(.+)\]\]"
-    reg_others = "(\d+)\[(\d+),\[(\d+),(.+)\]\]"
+    reg = "(\d+)\[(?:(\d+),)*(\d+),\[(\d+),(.+)\]\]"
 
     for s in line_list:
         if s.startswith('#'): continue
 
-        found = re.findall(reg_others, s)[0]
+        found = re.findall(reg, s)[0]
 
         curr_obj = LineObj(found)
         decoded_list.append(curr_obj)
