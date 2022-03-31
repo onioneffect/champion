@@ -9,7 +9,7 @@ class LineObj:
 
     joined = 0
 
-    pixels = list()
+    pixels = []
 
     def __str__(self):
         s = ""
@@ -26,8 +26,10 @@ class LineObj:
         return s
 
     def __init__(self, matches : tuple):
+        """There's two different formats. See below."""
         # self.salt = [int(i) for i in [matches[0], matches[1], matches[3]]]
         self.salt = [int(i) for i in [matches[0], matches[1], matches[2]]]
+
         if self.salt != self.expected_salt:
             print("WARNING: Salt does not match expected values!", file=sys.stderr)
             self.good_salt = False
@@ -36,8 +38,10 @@ class LineObj:
 
         self.joined = int(matches[2])
 
+        """There's two different formats. See below."""
         # coords = [int(i) for i in matches[4].split(',')]
         coords = [int(i) for i in matches[3].split(',')]
+
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
 
@@ -58,7 +62,7 @@ def save_list(obj_list : list):
         d = ImageDraw.Draw(im)
 
         for pix in j.pixels:
-            x, y = pix[0], pix[1]
+            x, y = [*pix]
             d.ellipse((x, y, x+5, y+5), fill = 'black')
 
         im.save("out/IGOR-{}.jpg".format(i))
@@ -69,15 +73,23 @@ def pretty_print(obj_list : list):
 def decode(line_list : list) -> list:
     decoded_list = []
 
+    """
+    There's two different formats:
+    The first one (commented out) includes a unix timestamp
+    of when YOU (person reading this) joined the Gartic lobby
+    """
     # reg = "(\d*)\[(\d*),(\d*),\[(\d*),(.*)\]\]"
-    reg = "(\d*)\[(\d*),\[(\d*),(.*)\]\]" # ITS DIFFERENT NOW???
-    # I THINK ITS BECAUSE IT WAS SOMEONE ELSES DRAWING
-    # SO IT DOESNT INCLUDE THE UNIX TIMESTAMP
-    # FML
+
+    """
+    This second format doesn't have the unix timestamp
+    it's the format used for everyone else
+    """
+    reg = "(\d*)\[(\d*),\[(\d*),(.*)\]\]"
+
     for s in line_list:
         if s.startswith('#'): continue
 
-        found = re.findall(reg, s)[0] # re.findall returns a list with a single tuple inside. idk.
+        found = re.findall(reg, s)[0]
 
         curr_obj = LineObj(found)
         decoded_list.append(curr_obj)
@@ -85,19 +97,19 @@ def decode(line_list : list) -> list:
     return decoded_list
 
 def read_file(path : str) -> list:
-    encoded_list = list()
+    encoded_list = []
 
     fp = open(path, "r")
-    while s := fp.readline(): # THEY FINALLY ADDED IT GUYS THE WALNUTS OPERATOR XD
+    while s := fp.readline(): # WALNUTS OPERATOR XD
         encoded_list.append(s)
 
     return decode(encoded_list)
 
 def read_stdin() -> list:
-    encoded_list = list()
+    encoded_list = []
 
     print("Running in stdin mode...")
-    while (s := input("")) not in ("\x04" ""): # 0x04 is CTRL-D.
+    while (s := input("")) not in ("\x04" ""): # CTRL-D or an empty line
         encoded_list.append(s)
 
     return decode(encoded_list)
