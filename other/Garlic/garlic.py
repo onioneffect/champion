@@ -1,3 +1,9 @@
+# TODO:
+# Check if number of coordinates is odd
+# (it's not supposed to be)
+# 
+# Check if out/ directory exists
+
 import re, sys, os, time
 from PIL import Image, ImageDraw
 from datetime import datetime
@@ -24,14 +30,12 @@ class LineObj:
         else:
             self.good_salt = True
 
-
         if matches[1]:
             self.joined = int(matches[1])
             self.owner = LineObj.MY_DRAWING
         else:
             self.owner = LineObj.SOMEONE_ELSES
 
-        """There's two different formats. See below."""
         coords = [int(i) for i in matches[4].split(',')]
 
         # Thanks to stackoverflow.com/questions/44104729
