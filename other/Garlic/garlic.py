@@ -64,7 +64,7 @@ def save_list(obj_list : list):
             start = j.pixels[pix_index-1]
             end = j.pixels[pix_index]
 
-            d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 0)
+            d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 5)
 
             if j.owner == LineObj.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
