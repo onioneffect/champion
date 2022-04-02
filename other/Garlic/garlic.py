@@ -60,7 +60,6 @@ def save_list(obj_list : list):
         l = len(j.pixels)
 
         for pix_index in range(1, l):
-            print(">>>", j.pixels, pix_index)
             start = j.pixels[pix_index-1]
             end = j.pixels[pix_index]
 
