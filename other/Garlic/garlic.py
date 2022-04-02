@@ -57,16 +57,21 @@ def save_list(obj_list : list):
     d = ImageDraw.Draw(im)
 
     for i, j in enumerate(obj_list):
-        for pix in j.pixels:
-            x, y = [*pix]
-            d.ellipse((x, y, x+5, y+5), fill = 'black')
+        l = len(j.pixels)
+
+        for pix_index in range(1, l):
+            print(">>>", j.pixels, pix_index)
+            start = j.pixels[pix_index-1]
+            end = j.pixels[pix_index]
+
+            d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 0)
 
             if j.owner == LineObj.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
             elif j.owner == LineObj.SOMEONE_ELSES:
                 d.ellipse((10, 10, 20, 20), fill = 'blue')
 
-        im.save("out/IGOR-{}.jpg".format(i))
+            im.save("out/IGOR-{}.jpg".format(i))
 
 def decode(line_list : list) -> list:
     decoded_list = []
