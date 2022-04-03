@@ -1,8 +1,6 @@
 # TODO:
 # Check if number of coordinates is odd
 # (it's not supposed to be)
-# 
-# Check if out/ directory exists
 
 import re, sys, os, time
 from PIL import Image, ImageDraw
@@ -112,6 +110,10 @@ if __name__ == "__main__":
         ret = read_file(sys.argv[1])
     
     save_list(ret)
+
+    if not os.path.isdir("out"):
+        os.mkdir("out")
+
     clean_files("out")
 
     sys.exit(0)
