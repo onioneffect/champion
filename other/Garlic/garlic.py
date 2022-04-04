@@ -1,7 +1,3 @@
-# TODO:
-# Check if number of coordinates is odd
-# (it's not supposed to be)
-
 import re, sys, os, time
 from PIL import Image, ImageDraw
 from datetime import datetime
@@ -35,6 +31,8 @@ class LineObj:
             self.owner = LineObj.SOMEONE_ELSES
 
         coords = [int(i) for i in matches[4].split(',')]
+        if len(coords) % 2:
+            raise ValueError("Odd number of coordinates!")
 
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
