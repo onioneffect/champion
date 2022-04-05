@@ -64,16 +64,16 @@ def save_list(obj_list : list):
 
             d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 5)
 
-            # Read these two lines and tell me I'm not a programming genius.
-            d.text((20, 30), str(i-1), fill = 'white', font = draw_font)
-            d.text((20, 30), str(i), fill = 'black', font = draw_font)
-
             if j.owner == LineObj.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
             elif j.owner == LineObj.SOMEONE_ELSES:
                 d.ellipse((10, 10, 20, 20), fill = 'blue')
 
-            im.save("out/IGOR-{}.jpg".format(i))
+            numbered_im = im.copy()
+            numbered_d = ImageDraw.Draw(numbered_im)
+
+            numbered_d.text((20, 30), str(i), fill = 'black', font = draw_font)
+            numbered_im.save("out/IGOR-{}.jpg".format(i))
 
 def decode(line_list : list) -> list:
     decoded_list = []
