@@ -1,5 +1,5 @@
 import re, sys, os, time
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 
 class LineObj:
@@ -52,6 +52,9 @@ def save_list(obj_list : list):
     im = Image.new('RGB', (600, 600), (255, 255, 255))
     d = ImageDraw.Draw(im)
 
+    # Yes, I am using the meme font.
+    draw_font = ImageFont.truetype('impact.ttf', 50)
+
     for i, j in enumerate(obj_list):
         l = len(j.pixels)
 
@@ -60,6 +63,10 @@ def save_list(obj_list : list):
             end = j.pixels[pix_index]
 
             d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 5)
+
+            # Read these two lines and tell me I'm not a programming genius.
+            d.text((20, 30), str(i-1), fill = 'white', font = draw_font)
+            d.text((20, 30), str(i), fill = 'black', font = draw_font)
 
             if j.owner == LineObj.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
