@@ -2,13 +2,20 @@ import re, sys, os, time
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 
-class LineObj:
+class Consts:
     MY_DRAWING = 1
     SOMEONE_ELSES = 2
 
+    DRAW = 0
+    COLOR = 1
+
+class LineObj:
     salt = []
-    expected_salt = [42, 10, 2]
     good_salt = False
+    expected_salts = [
+        [42, 10, 2], # 0 = DRAWING
+        [42, 10, 5]  # 1 = COLOR CHANGE
+    ]
 
     owner = 0
     joined = 0
@@ -18,17 +25,19 @@ class LineObj:
     def __init__(self, matches : tuple):
         self.salt = [int(i) for i in [matches[0], matches[2], matches[3]]]
 
-        if self.salt != self.expected_salt:
-            print("WARNING: Salt does not match expected values!", file=sys.stderr)
-            self.good_salt = False
-        else:
-            self.good_salt = True
+        for i, j in enumerate(self.expected_salts):
+            if self.salt == j:
+                self.good_salt = True
+                self.line_type = i
+
+        if not self.good_salt:
+            print("WARNING: Salt does not match any expected values!", file=sys.stderr)
 
         if matches[1]:
             self.joined = int(matches[1])
-            self.owner = LineObj.MY_DRAWING
+            self.owner = Consts.MY_DRAWING
         else:
-            self.owner = LineObj.SOMEONE_ELSES
+            self.owner = Consts.SOMEONE_ELSES
 
         coords = [int(i) for i in matches[4].split(',')]
         if len(coords) % 2:
@@ -56,6 +65,9 @@ def save_list(obj_list : list):
     draw_font = ImageFont.truetype('impact.ttf', 50)
 
     for i, j in enumerate(obj_list):
+        if j.line_type != Consts.DRAW:
+            print("Not a drawing command...")
+
         l = len(j.pixels)
 
         for pix_index in range(1, l):
@@ -64,9 +76,9 @@ def save_list(obj_list : list):
 
             d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 5)
 
-            if j.owner == LineObj.MY_DRAWING:
+            if j.owner == Consts.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
-            elif j.owner == LineObj.SOMEONE_ELSES:
+            elif j.owner == Consts.SOMEONE_ELSES:
                 d.ellipse((10, 10, 20, 20), fill = 'blue')
 
             numbered_im = im.copy()
