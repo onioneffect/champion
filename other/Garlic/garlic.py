@@ -32,7 +32,10 @@ class LineObj:
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
 
-    def __init_color(self, matches : tuple): pass
+    # Also stackoverflow.com/questions/29643352
+    def __init_color(self, matches : tuple):
+        hex = matches[4].strip('\" x') # Strip double quotes and the letter 'x'
+        self.color = tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
 
     def __init__(self, matches : tuple):
         expected_salts = [
@@ -67,21 +70,22 @@ def clean_files(dir : str):
 def save_list(obj_list : list):
     im = Image.new('RGB', (600, 600), (255, 255, 255))
     d = ImageDraw.Draw(im)
+    linecol = (0, 0, 0) # Default is black
 
     # Yes, I am using the meme font.
     draw_font = ImageFont.truetype('impact.ttf', 50)
 
     for i, j in enumerate(obj_list):
-        if j.line_type != Consts.DRAW:
-            print("Not a drawing command...")
+        if j.line_type == Consts.COLOR:
+            linecol = j.color
+            continue
 
         l = len(j.pixels)
-
         for pix_index in range(1, l):
             start = j.pixels[pix_index-1]
             end = j.pixels[pix_index]
 
-            d.line([start[0], start[1], end[0], end[1]], fill = 'black', width = 5)
+            d.line([start[0], start[1], end[0], end[1]], fill = linecol, width = 5)
 
             if j.owner == Consts.MY_DRAWING:
                 d.ellipse((10, 10, 20, 20), fill = 'red')
