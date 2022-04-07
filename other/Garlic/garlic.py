@@ -12,27 +12,13 @@ class Consts:
 class LineObj:
     salt = []
     good_salt = False
-    expected_salts = [
-        [42, 10, 2], # 0 = DRAWING
-        [42, 10, 5]  # 1 = COLOR CHANGE
-    ]
 
     owner = 0
     joined = 0
 
     pixels = []
 
-    def __init__(self, matches : tuple):
-        self.salt = [int(i) for i in [matches[0], matches[2], matches[3]]]
-
-        for i, j in enumerate(self.expected_salts):
-            if self.salt == j:
-                self.good_salt = True
-                self.line_type = i
-
-        if not self.good_salt:
-            print("WARNING: Salt does not match any expected values!", file=sys.stderr)
-
+    def __init_draw(self, matches : tuple):
         if matches[1]:
             self.joined = int(matches[1])
             self.owner = Consts.MY_DRAWING
@@ -45,6 +31,27 @@ class LineObj:
 
         # Thanks to stackoverflow.com/questions/44104729
         self.pixels = list(zip(*[iter(coords)]*2))
+
+    def __init_color(self, matches : tuple): pass
+
+    def __init__(self, matches : tuple):
+        expected_salts = [
+            [[42, 10, 2], self.__init_draw], # 0 = DRAWING
+            [[42, 10, 5], self.__init_color] # 1 = COLOR CHANGE
+        ]
+
+        self.salt = [int(i) for i in [matches[0], matches[2], matches[3]]]
+
+        for i, j in enumerate(expected_salts):
+            if self.salt == j[0]:
+                self.good_salt = True
+                self.line_type = i
+
+        if not self.good_salt:
+            print("WARNING: Salt does not match any expected values!", file=sys.stderr)
+
+        self.call_me = expected_salts[self.line_type][1]
+        self.call_me(matches)
 
 def clean_files(dir : str):
     ls = os.listdir(dir)
