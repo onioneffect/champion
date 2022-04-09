@@ -32,4 +32,5 @@ WIP
 ## TODO:
 * ~~Rewrite entire program in a single language~~
 * Write a proxy server to make the whole process easier
-* Add different encoding for images (Gartic and TeeKO)
+* ~~Add different encoding for images (Gartic and TeeKO)~~
+* Write alternative encoding module in Go

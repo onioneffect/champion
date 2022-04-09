@@ -1,6 +1,5 @@
 import re, sys, os, time
 from PIL import Image, ImageDraw, ImageFont
-from datetime import datetime
 
 class Consts:
     MY_DRAWING = 1
