@@ -1,6 +1,6 @@
 /*
 	file.go: Handle file input and output.
-	Copyright (C) 2021-2022  onioneffect
+	Copyright (C) 2021-2023  onioneffect
 
 	This file is part of Champion.
 

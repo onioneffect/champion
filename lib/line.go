@@ -1,6 +1,6 @@
 /*
-	line.go: Complex digital image processing.
-	Copyright (C) 2021-2022  onioneffect
+	line.go: Bitmap image processing.
+	Copyright (C) 2021-2023  onioneffect
 
 	This file is part of Champion.
 

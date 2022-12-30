@@ -1,6 +1,6 @@
 /*
 	champion_test.go: Test the functionalities of the program.
-	Copyright (C) 2021-2022  onioneffect
+	Copyright (C) 2021-2023  onioneffect
 
 	This file is part of Champion.
 
